@@ -2,9 +2,11 @@
 
 Author: Vladan Petkovic
 
+Winter semester 2023
+
 ---
 
-> "This HTTP/REST-based server is built to be a platform for trading and battling with and
-against each other in a magical card-game world."
+> This card-game is written in Java and developed throughout the course of 
+> Software Engineering 1 in the 3rd Semester - Bachelor of Computer Science.
 
 University of Applied Sciences Technikum Wien
