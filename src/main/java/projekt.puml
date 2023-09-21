@@ -1,0 +1,83 @@
+@startuml
+class User
+{
+    -String username
+    -String password
+    -short coins
+    -Card[] stack
+    -int eloPoints
+    +{static} int userCount
+    +String getUsername()
+    +String getPassword()
+    +short getCoins()
+    +int getEloPoints()
+    +Card[] getUserCards()
+    +void setCredentials()
+    +void decreaseCoins()
+    +void manageCards()
+    +void addCardToDeck()
+    +void addUserCard(Card[] cardsToBeAdded)
+    +void tradeCards(Card cardToBeRemoved)
+    +void printDeck()
+}
+class Package
+{
+    +{static} final int cardCount = 5
+    #Card[] cards
+    +Card[] chooseRandomCards()
+}
+class Card
+{
+    #String name
+    +int final damage
+    #byte final elementType
+    #boolean isInDeck
+    +int getCardName()
+    +byte getElementType()
+    +boolean getIsCardInDeck()
+    +void setCardName()
+    +void setElementType()
+    +void setCardInDeck()
+}
+class CardMonster
+{
+    +void makeDamage()
+}
+class CardSpell
+{
+    +void makeDamage()
+}
+class Battle
+{
+    -User userOne
+    -User userTwo
+    +void setUser()
+    +User getUserOne()
+    +User getUserTwo()
+    +void printInstructions()
+    +void printAsciiImage()
+    +void startOfBattle()
+    +void endOfBattle()
+}
+class Game
+{
+    +User users[]
+    +Battle battle
+    +Statistics stats
+}
+class Statistics
+{
+    #int playerCount
+    +void printStats()
+}
+
+CardMonster <|-- Card
+CardSpell <|-- Card
+User o-- Card
+Game *-- Battle
+Game *-- Statistics
+Game *-- User
+Package o-- Card
+Battle *-- User
+Statistics o-- User
+@enduml
