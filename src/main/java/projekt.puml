@@ -1,18 +1,19 @@
 @startuml
 class User
 {
-    -String username
-    -String password
+    -short id
     -short coins
     -Card[] stack
     -int eloPoints
+    -boolean isLoggedIn
     +{static} int userCount
-    +String getUsername()
-    +String getPassword()
+    +short getUserId()
     +short getCoins()
     +int getEloPoints()
     +Card[] getUserCards()
-    +void setCredentials()
+    +boolean getIsLoggedIn()
+    +void setEloPoints()
+    +void setIsLoggedIn()
     +void decreaseCoins()
     +void manageCards()
     +void addCardToDeck()
@@ -23,15 +24,15 @@ class User
 class Package
 {
     +{static} final int cardCount = 5
-    #Card[] cards
+    -Card[] cards
     +Card[] chooseRandomCards()
 }
 class Card
 {
     #String name
     +int final damage
-    #byte final elementType
-    #boolean isInDeck
+    -byte final elementType
+    -boolean isInDeck
     +int getCardName()
     +byte getElementType()
     +boolean getIsCardInDeck()
@@ -51,12 +52,12 @@ class Battle
 {
     -User userOne
     -User userTwo
-    +void setUser()
+    +void setUsers(User firstUser, User secondUser)
     +User getUserOne()
     +User getUserTwo()
     +void printInstructions()
     +void printAsciiImage()
-    +void startOfBattle()
+    +void startNewBattle()
     +void endOfBattle()
 }
 class Game
@@ -64,20 +65,38 @@ class Game
     +User users[]
     +Battle battle
     +Statistics stats
+    +void startGame()
+    +void chooseAction()
+    +void endGame()
+    +boolean register()
+    +boolean login()
 }
 class Statistics
 {
-    #int playerCount
-    +void printStats()
+    +void printGameStats()
+    +void printBattleStats(int battleId)
+}
+class Database
+{
+    +boolean registerUser(String username, String password)
+    +boolean loginUser(String username, String password)
+    +String getUsername()
+    +String getPassword()
+    +int getEloPoints()
+    +void setUsername()
+    +void setPassword()
+    +void setEloPoints()
 }
 
 CardMonster <|-- Card
 CardSpell <|-- Card
-User o-- Card
-Game *-- Battle
-Game *-- Statistics
-Game *-- User
-Package o-- Card
-Battle *-- User
-Statistics o-- User
+User "1" o-- "0..*" Card : "owns"
+Game "1" *-- "0..*" Battle : "take place"
+Game "1" *-- "1" Statistics : "has"
+Game "1" *-- "2" User : "has"
+Game "1" *-- "1" Database : "has"
+Package o-- "1..*" Card : "contains"
+Battle "1..*" *-- "2" User : "is battled"
+Statistics "1" o-- "1..*" User : "make"
+Statistics "1..*" o-- "1" Database : "is placed in"
 @enduml
