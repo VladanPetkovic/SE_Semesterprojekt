@@ -19,6 +19,7 @@ some Commands needed during the project:
 | Kürzel:                       | Bedeutung                                                                                                                            |
 |-------------------------------|--------------------------------------------------------------------------------------------------------------------------------------|
 | git status                    | List which files are staged, unstaged, and untracked.                                                                                |
+| git push --set-upstream origin <branch_name> | set origin to other branch |
 | git init                      | initialize an existing directory as a Git repository                                                                                 |
 | git add "filename"            | add file to project                                                                                                                  |
 | git add --all                 | add all changes or files                                                                                                             |
