@@ -35,7 +35,3 @@ some Commands needed during the project:
 | git diff                      | Show unstaged changes between your index and working directory.                                                                                                                                                 |
 | git log -<limit>              | Limit number of commits by <limit>. E.g. ”git log -5” will limit to 5 commits.                                                                                                                                  |
 | git reset <file>              | git remote add origin git@github.com:VladanPetkovic/SE_Semesterprojekt.git Remove <file> from the staging area, but leave the working directory unchanged. This unstages a file without overwriting any changes |
-some Comment
-sdasd
-asdsda
-asdasds
