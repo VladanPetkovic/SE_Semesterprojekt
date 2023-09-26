@@ -10,3 +10,13 @@ Winter semester 2023
 > Software Engineering 1 in the 3rd Semester - Bachelor of Computer Science.
 
 University of Applied Sciences Technikum Wien
+
+---
+|Kürzel:| Bedeutung         |
+|-------|-------------------|
+|git status| momentaner Status |
+|git init| initialize|
+|git add "filename"| add file to project|
+|git add --all| add all changes or files|
+|git commit -m "Some comment"| commit your changes|
+|git push -u origin main| push to origin|
