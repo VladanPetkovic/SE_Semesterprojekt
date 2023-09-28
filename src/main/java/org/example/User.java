@@ -5,19 +5,10 @@ import lombok.Setter;
 
 @Getter
 @Setter
-// todo: add database
 public class User {
-    private String username;
-    private String password;
-    private short coins;
+    private Profile profile;
     private Card[] stack;
-    private int eloPoints;
-    public static int userCount;
-
-    public void setCredentials()
-    {
-
-    }
+    private boolean isLoggedIn;
     public void decreaseCoins()
     {
 

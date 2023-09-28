@@ -1,25 +1,38 @@
 @startuml
 class User
 {
-    -short id
-    -short coins
+    -Profile profile
     -Card[] stack
-    -int eloPoints
     -boolean isLoggedIn
-    +{static} int userCount
-    +short getUserId()
-    +short getCoins()
-    +int getEloPoints()
+    +Profile getProfile()
     +Card[] getUserCards()
     +boolean getIsLoggedIn()
-    +void setEloPoints()
     +void setIsLoggedIn()
-    +void decreaseCoins()
+    +void setProfile()
     +void manageCards()
     +void addCardToDeck()
     +void addUserCard(Card[] cardsToBeAdded)
     +void tradeCards(Card cardToBeRemoved)
     +void printDeck()
+}
+class Profile
+{
+    -String username
+    -String password
+    -short coins
+    -short eloPoints
+    -{static} int profileCount
+    +void setUsername(String name)
+    +void setPassword(String pw)
+    +void setCoins()
+    +void setEloPoints()
+    +String getUsername()
+    +String getPassword()
+    +short getCoins()
+    +short getEloPoints()
+    +short getProfileCount()
+    +void decreaseEloPoints(short number)
+    +void increaseEloPoints(short number)
 }
 class Package
 {
@@ -29,7 +42,7 @@ class Package
 }
 class Card
 {
-    #String name
+    -String name
     +int final damage
     -byte final elementType
     -boolean isInDeck
@@ -80,12 +93,6 @@ class Database
 {
     +boolean registerUser(String username, String password)
     +boolean loginUser(String username, String password)
-    +String getUsername()
-    +String getPassword()
-    +int getEloPoints()
-    +void setUsername()
-    +void setPassword()
-    +void setEloPoints()
 }
 
 CardMonster <|-- Card
@@ -94,9 +101,8 @@ User "1" o-- "0..*" Card : "owns"
 Game "1" *-- "0..*" Battle : "take place"
 Game "1" *-- "1" Statistics : "has"
 Game "1" *-- "2" User : "has"
-Game "1" *-- "1" Database : "has"
 Package o-- "1..*" Card : "contains"
 Battle "1..*" *-- "2" User : "is battled"
 Statistics "1" o-- "1..*" User : "make"
-Statistics "1..*" o-- "1" Database : "is placed in"
+Profile "1" *-- "1" User : has
 @enduml
