@@ -1,5 +1,11 @@
 package org.example;
 
+import lombok.Getter;
+import lombok.Setter;
+import java.lang.Math;
+
+@Getter
+@Setter
 public class Battle {
     private User userOne;
     private User userTwo;
@@ -30,5 +36,9 @@ public class Battle {
     public void endOfBattle()
     {
 
+    }
+    public void calculateEloPoints()
+    {
+        System.out.println(Math.pow(2,6));
     }
 }
