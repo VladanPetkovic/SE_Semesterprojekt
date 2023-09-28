@@ -37,8 +37,9 @@ public class Battle {
     {
 
     }
-    public void calculateEloPoints()
+    public void calculateEloPoints(int firstEloPoints, int secondEloPoints)
     {
-        System.out.println(Math.pow(2,6));
+        double calculation = 1/(1 + Math.pow(10, (double) (firstEloPoints - secondEloPoints) /200));
+        System.out.println(calculation);
     }
 }
