@@ -20,8 +20,8 @@ class Profile
     -String username
     -String password
     -short coins
-    -short eloPoints
-    -{static} int profileCount
+    -int eloPoints
+    -{static} short profileCount
     +void setUsername(String name)
     +void setPassword(String pw)
     +void setCoins()
@@ -29,10 +29,14 @@ class Profile
     +String getUsername()
     +String getPassword()
     +short getCoins()
-    +short getEloPoints()
+    +int getEloPoints()
     +short getProfileCount()
-    +void decreaseEloPoints(short number)
-    +void increaseEloPoints(short number)
+}
+enum Result
+{
+    LOSS
+    WIN
+    TIE
 }
 class Package
 {
@@ -69,9 +73,9 @@ class Battle
     +User getUserOne()
     +User getUserTwo()
     +void printInstructions()
-    +void printAsciiImage()
     +void startNewBattle()
     +void endOfBattle()
+    +void setNewEloPoints()
 }
 class Game
 {
@@ -83,6 +87,9 @@ class Game
     +void endGame()
     +boolean register()
     +boolean login()
+    +void printAsciiImage()
+    +void printInstructions()
+    +{static} void clearScreen()
 }
 class Statistics
 {
@@ -103,6 +110,7 @@ Game "1" *-- "1" Statistics : "has"
 Game "1" *-- "2" User : "has"
 Package o-- "1..*" Card : "contains"
 Battle "1..*" *-- "2" User : "is battled"
+Result "1" *-- "1..*" Battle : "ends in"
 Statistics "1" o-- "1..*" User : "make"
-Profile "1" *-- "1" User : has
+Profile "1" *-- "1" User : "has"
 @enduml
