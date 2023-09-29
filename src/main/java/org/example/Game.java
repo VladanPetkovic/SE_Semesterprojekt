@@ -5,8 +5,7 @@ import java.util.Scanner;
 public class Game {
     public Game()
     {
-        startGame();
-        endGame();
+
     }
 
     public User[] users;
