@@ -3,6 +3,7 @@ package org.example;
 import lombok.Getter;
 import lombok.Setter;
 import java.lang.Math;
+import java.util.Scanner;
 
 @Getter
 @Setter
@@ -15,11 +16,58 @@ public class Battle {
     }
     public void printInstructions()
     {
+        for(int i = 0; i < 5; i++)
+            System.out.println();
+
+        System.out.println("Instructions: ");
+        System.out.println("\t\tType \"START\" for starting a new battle.");
+        System.out.println("\t\tType \"INFO\" for viewing the battle instructions - how the game is played.");
+        System.out.println("\t\tType \"BACK\" for returning to the main menu.");
+        System.out.println("\tYour input can be case insensitive.");
+    }
+    public void printBattleInformation()
+    {
+        for(int i = 0; i < 5; i++)
+            System.out.println();
+
+        System.out.println("Battle-logic: ");
+        System.out.println("\tYour items:");
+        System.out.println("\t\tSTACK");
+        System.out.println("\t\t\tThe collections of your cards - you can trade cards.");
+        System.out.println("\t\tDECK");
+        System.out.println("\t\t\tFour best cards you have selected for the battle.");
+        System.out.println("\t\tCOINS");
+        System.out.println("\t\t\tYou are starting with 20 coins.");
+        System.out.println("\t\t\tBuy a package (5 cards) for 5 coins.");
+        System.out.println("\t\tCard is either a spell or a monster card.");
+        System.out.println("\t\tCard is either a spell or a monster card.");
+        System.out.println("\t\tYou can buy a package (5 cards) with 5 coins.");
+        System.out.println("\t\tSelect the best four cards into your deck");
+        System.out.println("\tYour input can be case insensitive.");
+    }
+    public void showBattleMenu()
+    {
+        printInstructions();
+        Scanner scanner = new Scanner(System.in);
+        String input;
+
+        // choose different actions in game
+        do
+        {
+            System.out.print("Type here: ");
+            input = scanner.nextLine();
+            if(input.equalsIgnoreCase("start"))
+            {
+                startOfBattle();
+            } else if (input.equalsIgnoreCase("info")) {
+                printBattleInformation();
+            }
+        }while(!input.equalsIgnoreCase("back"));
 
     }
     public void startOfBattle()
     {
-
+        System.out.println("Some battle start");
     }
     public void endOfBattle()
     {

@@ -8,9 +8,8 @@ public class Game {
 
     }
 
-    public User[] users;
-    public Battle battle;
-    public Statistics stats;
+    private User[] users;
+    private Statistics stats;
 
 
     public void startGame()
@@ -18,9 +17,33 @@ public class Game {
         printAsciiImage();
         clearScreen();
     }
-    public void chooseAction()
+    public void showMenu()
     {
+        String input;
+        printInstructions();
+        Scanner scanner = new Scanner(System.in);
 
+        // choose different actions in the game menu
+        do
+        {
+            System.out.print("Type here: ");
+            input = scanner.nextLine();
+            if(input.equalsIgnoreCase("battle"))
+            {
+                startBattle();
+            } else if (input.equalsIgnoreCase("stats")) {
+                stats.printGameStats();
+            } else if(input.equalsIgnoreCase("profile")) {
+                System.out.println("Not implemented yet");
+            }
+        }while(!input.equalsIgnoreCase("quit"));
+
+        scanner.close();
+    }
+    public void startBattle()
+    {
+        Battle someBattle = new Battle();
+        someBattle.showBattleMenu();
     }
     public void endGame()
     {
@@ -36,6 +59,12 @@ public class Game {
     }
     public void printAsciiImage()
     {
+        System.out.println("Welcome to Monster Trading Cards Game!");
+        // clearing screen
+        for(int i = 0; i < 4; i++)
+        {
+            System.out.println();
+        }
         // ascii image from https://asciiart.website/index.php?art=creatures/monsters [29.09.2023].
         // credits to Shelia (aka "Melody")
         System.out.println(
@@ -61,7 +90,13 @@ public class Game {
     }
     public void printInstructions()
     {
-        System.out.println("Some Instructions:");
+        System.out.println("Game-Menu: ");
+        System.out.println("\tChoose between following possibilities:");
+        System.out.println("\t\tType \"BATTLE\" for battling against an other player.");
+        System.out.println("\t\tType \"STATS\" for viewing your statistics.");
+        System.out.println("\t\tType \"PROFILE\" for viewing and editing your profile.");
+        System.out.println("\t\tType \"QUIT\" for quiting the game.");
+        System.out.println("\tYour input can be case insensitive.");
     }
     public static void clearScreen() {
         // does not work as intended, but does the job of clearing the screen
@@ -72,5 +107,6 @@ public class Game {
         {
             System.out.println();
         }
+        //scanner.close(); -- makes an error if uncommented
     }
 }

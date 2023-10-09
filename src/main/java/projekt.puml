@@ -73,17 +73,19 @@ class Battle
     +User getUserOne()
     +User getUserTwo()
     +void printInstructions()
+    +void printBattleInformation()
+    +void showBattleMenu()
     +void startNewBattle()
     +void endOfBattle()
     +void setNewEloPoints()
 }
 class Game
 {
-    +User users[]
-    +Battle battle
-    +Statistics stats
+    -User users[]
+    -Statistics stats
     +void startGame()
-    +void chooseAction()
+    +void showMenu()
+    +void startBattle()
     +void endGame()
     +boolean register()
     +boolean login()
