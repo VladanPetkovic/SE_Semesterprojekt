@@ -17,14 +17,16 @@ public class Battle {
     }
     public void printInstructions()
     {
-        for(int i = 0; i < 5; i++)
+        for(int i = 0; i < 4; i++) {
             System.out.println();
+        }
 
         System.out.println("Instructions: ");
         System.out.println("\t\tType \"START\" for starting a new battle.");
         System.out.println("\t\tType \"INFO\" for viewing the battle instructions - how the game is played.");
         System.out.println("\t\tType \"BACK\" for returning to the main menu.");
         System.out.println("\tYour input can be case insensitive.");
+        System.out.print("\t\tType here: ");
     }
     public void printBattleInformation()
     {
@@ -47,56 +49,33 @@ public class Battle {
         System.out.println("\t\t\t\telement type does not effect pure monster fights");
         System.out.println("\t\t\tSpell cards:");
         System.out.println("\t\t\t\tattacks with an element based spell (fire, water, normal)");
-        System.out.println("\t\t\t\t\teffective, non effective, no effect");
-        System.out.println("\t\tSelect the best four cards into your deck");
-        System.out.println("\tYour input can be case insensitive.");
-  /*
-• spell cards
-        a spell card can attack with an element based spell (again fire, water, normal) which is:
-– effective (eg: water is effective against fire, so damage is doubled)
-– not effective (eg: fire is not effective against water, so damage is halved)
-– no effect (eg: normal monster vs normal spell, no change of damage, direct
-        comparison between damages) Effectiveness:
-• water -> fire
-• fire -> normal
-• normal -> water
-        Cards are chosen randomly each round from the deck to compete (this means 1 round is a
-            battle of 2 cards = 1 of each player). There is no attacker or defender. All parties are equal in
-        each round. Pure monster fights are not affected by the element type. As soon as 1 spell
-        cards is played the element type has an effect on the damage calculation of this single
-        round. Each round the card with higher calculated damage wins. Defeated monsters/spells
-        of the competitor are removed from the competitor’s deck and are taken over in the deck of
-        the current player (vice versa). In case of a draw of a round no action takes place (no cards
-        are moved). Because endless loops are possible we limit the count of rounds to 100 (ELO
-        stays unchanged in case of a draw of the full game).
-        3
-        As a result of the battle we want to return a log which describes the battle in great detail.
-        Afterwards the player stats (see scoreboard) need to be updated (count of games played
-        and ELO calculation).
-        The following specialties are to consider:
-• Goblins are too afraid of Dragons to attack.
-• Wizzard can control Orks so they are not able to damage them.
-• The armor of Knights is so heavy that WaterSpells make them drown them instantly.
-• The Kraken is immune against spells.
-• The FireElves know Dragons since they were little and can evade their attacks.
-*/
+        System.out.println("\t\t\t\t\teffective (water > fire), not effective (fire < water), no effect (both are normal)");
+        System.out.println("\t\t\t\t\tEffectiveness: water > fire, fire > normal, normal > water");
+        System.out.println("\t\tCards are chosen randomly from your deck");
+        System.out.println("\t\tPure monster fights are not affected by the element type as long as no spell card is played.");
+        System.out.println("\t\tCards with higher calculated damage win.");
+        System.out.println("\t\tDefeated cards are moved to the deck of the other player.");
+        System.out.println("\tOutcome:");
+        System.out.println("\t\tAttack-values are equal --> draw: no cards are moved.");
+        System.out.println("\t\tBattle lasts until one player has no cards in his deck.");
     }
     public void showBattleMenu()
     {
-        printInstructions();
         Scanner scanner = new Scanner(System.in);
         String input;
 
         // choose different actions in game
         do
         {
-            System.out.print("Type here: ");
+            printInstructions();
             input = scanner.nextLine();
             if(input.equalsIgnoreCase("start"))
             {
                 startOfBattle();
             } else if (input.equalsIgnoreCase("info")) {
                 printBattleInformation();
+                System.out.println("Press -ENTER- to continue.");
+                scanner.nextLine();
             }
         }while(!input.equalsIgnoreCase("back"));
 
