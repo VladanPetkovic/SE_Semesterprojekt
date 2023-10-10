@@ -28,6 +28,12 @@ public class App implements ServerApp {
                     return this.cityController.getCities();
                 }
             }
+            case POST: {
+                if (request.getPathname().equals("/cities")) {
+                    String body = request.getBody();
+                    return this.cityController.createCity(body);
+                }
+            }
         }
 
         return new Response(HttpStatus.NOT_FOUND, ContentType.JSON, "{ \"error\": \"Not Found\", \"data\": null }");

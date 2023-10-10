@@ -1,5 +1,6 @@
 package org.example.server.app.controllers;
 
+import org.example.server.app.models.City;
 import org.example.server.app.services.CityService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.example.server.http.ContentType;
@@ -51,7 +52,23 @@ public class CityController extends Controller {
     }
 
     // POST /cities
-    public void createCity() {
+    public Response createCity(String body) {
+        try {
+            City newCity = getObjectMapper().readValue(body, City.class);
+            return new Response(
+                    HttpStatus.CREATED,
+                    ContentType.JSON,
+                    "{}"
+            );
+        } catch(JsonProcessingException e)
+        {
+            e.printStackTrace();
+            return new Response(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    ContentType.JSON,
+                    "{}"
+            );
+        }
 
     }
 
