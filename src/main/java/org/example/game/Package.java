@@ -1,4 +1,4 @@
-package org.example;
+package org.example.game;
 
 public class Package {
     public static final short cardCount = 5;

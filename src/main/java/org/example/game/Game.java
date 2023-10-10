@@ -1,4 +1,8 @@
-package org.example;
+package org.example.game;
+
+import org.example.game.Battle;
+import org.example.game.Statistics;
+import org.example.game.User;
 
 import java.util.Scanner;
 
