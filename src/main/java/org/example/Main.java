@@ -9,14 +9,14 @@ import java.io.IOException;
 public class Main {
     public static void main(String[] args)
     {
-        /*
+        /**/
         Game game = new Game();
         game.startGame();
         game.showMenu();
         game.endGame();
-        */
 
 
+        /*
         App app = new App();
         Server server = new Server(app, 7777);
         try {
@@ -24,5 +24,7 @@ public class Main {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+         */
     }
 }

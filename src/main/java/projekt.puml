@@ -90,6 +90,7 @@ class Game
     +boolean register()
     +boolean login()
     +void printAsciiImage()
+    +void printWelcomeImage()
     +void printInstructions()
     +{static} void clearScreen()
 }
