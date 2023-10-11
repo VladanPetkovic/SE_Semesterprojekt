@@ -23,6 +23,7 @@ public class Battle {
 
         System.out.println("Instructions: ");
         System.out.println("\t\tType \"START\" for starting a new battle.");
+        System.out.println("\t\tType \"SHOP\" for purchasing and trading cards.");
         System.out.println("\t\tType \"INFO\" for viewing the battle instructions - how the game is played.");
         System.out.println("\t\tType \"BACK\" for returning to the main menu.");
         System.out.println("\tYour input can be case insensitive.");

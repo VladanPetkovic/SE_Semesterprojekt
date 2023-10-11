@@ -24,6 +24,7 @@ public class Game {
     }
     public void showMenu()
     {
+        boolean isLoggedIn = false;
         String input = "";
         Scanner scanner = new Scanner(System.in);
 
@@ -32,7 +33,7 @@ public class Game {
         {
             printInstructions();
             input = scanner.nextLine();
-            if(input.equalsIgnoreCase("battle")) {
+            if(input.equalsIgnoreCase("battle") && isLoggedIn) {
                 startBattle();
             } else if (input.equalsIgnoreCase("stats")) {
                 stats.printGameStats();
@@ -61,6 +62,19 @@ public class Game {
     }
     public boolean login()
     {
+        System.out.println("Please login into your account!");
+        Scanner scanner = new Scanner(System.in);
+        String username = "";
+        String password = "";
+
+        // choose different actions in the game menu
+        do
+        {
+            System.out.print("Username: ");
+            username = scanner.nextLine();
+            System.out.print("Password: ");
+            password = scanner.nextLine();
+        }while(!username.equals("Vladan") && !password.equals("password"));
         return false;
     }
     public void printAsciiImage()
@@ -113,9 +127,11 @@ public class Game {
         }
         System.out.println("Game-Menu: ");
         System.out.println("\tChoose between following possibilities:");
-        System.out.println("\t\tType \"BATTLE\" for battling against an other player.");
+        System.out.println("\t\tType \"LOGIN\" to login into your account.");
+        System.out.println("\t\tType \"BATTLE\" for battling against an other player. --> only available if logged in");
         System.out.println("\t\tType \"STATS\" for viewing your statistics.");
         System.out.println("\t\tType \"PROFILE\" for viewing and editing your profile.");
+        System.out.println("\t\tType \"SIGNUP\" to create a new account.");
         System.out.println("\t\tType \"QUIT\" for quiting the game.");
         System.out.println("\tYour input can be case insensitive.");
         System.out.print("\t\tType here: ");

@@ -19,18 +19,18 @@ class Profile
 {
     -String username
     -String password
-    -short coins
+    -int coins
     -int eloPoints
-    -{static} short profileCount
+    -{static} int profileCount
     +void setUsername(String name)
     +void setPassword(String pw)
     +void setCoins()
     +void setEloPoints()
     +String getUsername()
     +String getPassword()
-    +short getCoins()
+    +int getCoins()
     +int getEloPoints()
-    +short getProfileCount()
+    +int getProfileCount()
 }
 enum Result
 {

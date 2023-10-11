@@ -8,12 +8,12 @@ import lombok.Setter;
 public class Profile {
         private String username;
         private String password;
-        private short coins;
+        private int coins;
         private int eloPoints;
-        private static short profileCount;
+        private static int profileCount;
 
         Profile()
         {
-            profileCount += 1;
+                profileCount += 1;
         }
 }
