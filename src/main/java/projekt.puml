@@ -2,10 +2,8 @@
 class User
 {
     -Profile profile
-    -Card[] stack
     -boolean isLoggedIn
     +Profile getProfile()
-    +Card[] getUserCards()
     +boolean getIsLoggedIn()
     +void setIsLoggedIn()
     +void setProfile()
@@ -19,9 +17,10 @@ class Profile
 {
     -String username
     -String password
-    -int coins
-    -int eloPoints
-    -{static} int profileCount
+    -int coins = 20
+    -int eloPoints = 100
+    -Card[] stack
+    +Profile(String un, String pw)
     +void setUsername(String name)
     +void setPassword(String pw)
     +void setCoins()
@@ -30,7 +29,8 @@ class Profile
     +String getPassword()
     +int getCoins()
     +int getEloPoints()
-    +int getProfileCount()
+    +Card[] getUserCards()
+    +void printProfile()
 }
 enum Result
 {
@@ -77,6 +77,7 @@ class Battle
     +void showBattleMenu()
     +void startNewBattle()
     +void endOfBattle()
+    +void shop()
     +void setNewEloPoints()
 }
 class Game
@@ -86,12 +87,14 @@ class Game
     +void startGame()
     +void showMenu()
     +void startBattle()
+    +void viewEditProfile()
     +void endGame()
-    +boolean register()
+    +void signIn()
+    +boolean signUp()
     +boolean login()
     +void printAsciiImage()
     +void printWelcomeImage()
-    +void printInstructions()
+    +void printInstructions(boolean inputError)
     +{static} void clearScreen()
 }
 class Statistics

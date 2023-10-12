@@ -11,22 +11,24 @@ import java.util.Scanner;
 public class Battle {
     private User userOne;
     private User userTwo;
-    public void setUser()
+    public void setUsers()
     {
-
+        // maybe setting users for battle --maybe
     }
-    public void printInstructions()
+    public void printInstructions(boolean wrongInputMade)
     {
         for(int i = 0; i < 4; i++) {
             System.out.println();
         }
-
-        System.out.println("Instructions: ");
+        System.out.println("Battle-Menu: ");
         System.out.println("\t\tType \"START\" for starting a new battle.");
         System.out.println("\t\tType \"SHOP\" for purchasing and trading cards.");
         System.out.println("\t\tType \"INFO\" for viewing the battle instructions - how the game is played.");
         System.out.println("\t\tType \"BACK\" for returning to the main menu.");
         System.out.println("\tYour input can be case insensitive.");
+        if(wrongInputMade) {
+            System.out.println("\t-----Wrong input - choose again!-----");
+        }
         System.out.print("\t\tType here: ");
     }
     public void printBattleInformation()
@@ -59,35 +61,51 @@ public class Battle {
         System.out.println("\tOutcome:");
         System.out.println("\t\tAttack-values are equal --> draw: no cards are moved.");
         System.out.println("\t\tBattle lasts until one player has no cards in his deck.");
+        System.out.println("Press -ENTER- to continue.");
     }
     public void showBattleMenu()
     {
+        boolean wrongInputMade = false;
         Scanner scanner = new Scanner(System.in);
         String input;
 
         // choose different actions in game
         do
         {
-            printInstructions();
+            // print Instructions to console
+            if(wrongInputMade) {
+                printInstructions(wrongInputMade);
+                wrongInputMade = false;
+            } else {
+                printInstructions(wrongInputMade);
+            }
+            // get Input
             input = scanner.nextLine();
-            if(input.equalsIgnoreCase("start"))
-            {
+            // process the input
+            if(input.equalsIgnoreCase("start")) {
                 startOfBattle();
-            } else if (input.equalsIgnoreCase("info")) {
+            } else if(input.equalsIgnoreCase("info")) {
                 printBattleInformation();
-                System.out.println("Press -ENTER- to continue.");
                 scanner.nextLine();
+            } else if(input.equalsIgnoreCase("shop")) {
+                shop();
+            } else if(!input.equalsIgnoreCase("back")) {
+                wrongInputMade = true;
             }
         }while(!input.equalsIgnoreCase("back"));
 
     }
     public void startOfBattle()
     {
-        System.out.println("Some battle start");
+
     }
     public void endOfBattle()
     {
 
+    }
+    public void shop()
+    {
+        System.out.println("you are visiting the shop");
     }
     public void setNewEloPoints(int userOneElo, int userTwoElo, Result result)
     {
@@ -98,18 +116,13 @@ public class Battle {
         double calculationTwo = 1/(1 + Math.pow(10, (double) (userOneElo - userTwoElo) /200));
         int newEloUserOne = 0;
         int newEloUserTwo = 0;
-        if(result == Result.LOSS)
-        {
+        if(result == Result.LOSS) {
             newEloUserOne = (int) (userOneElo + 40 * (0 - calculationOne));
             newEloUserTwo = (int) (userTwoElo + 40 * (1 - calculationTwo));
-        }
-        else if(result == Result.WIN)
-        {
+        } else if(result == Result.WIN) {
             newEloUserOne = (int) (userOneElo + 40 * (1 - calculationOne));
             newEloUserTwo = (int) (userTwoElo + 40 * (0 - calculationTwo));
-        }
-        else if(result == Result.TIE)
-        {
+        } else if(result == Result.TIE) {
             newEloUserOne = (int) (userOneElo + 40 * (0.5 - calculationOne));
             newEloUserTwo = (int) (userTwoElo + 40 * (0.5 - calculationTwo));
         }

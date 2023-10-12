@@ -4,6 +4,7 @@ import org.example.game.Battle;
 import org.example.game.Statistics;
 import org.example.game.User;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Game {
@@ -12,7 +13,7 @@ public class Game {
 
     }
 
-    private User[] users;
+    private ArrayList<User> users = new ArrayList<>();
     private Statistics stats;
 
 
@@ -24,23 +25,31 @@ public class Game {
     }
     public void showMenu()
     {
-        boolean isLoggedIn = false;
-        String input = "";
+        boolean wrongInputMade = false;
+        String input;
         Scanner scanner = new Scanner(System.in);
 
         // choose different actions in the game menu
         do
         {
-            printInstructions();
+            // print Instructions to console
+            if(wrongInputMade) {
+                printInstructions(wrongInputMade);
+                wrongInputMade = false;
+            } else {
+                printInstructions(wrongInputMade);
+            }
+            // get Input
             input = scanner.nextLine();
-            if(input.equalsIgnoreCase("battle") && isLoggedIn) {
+            // process the input
+            if(input.equalsIgnoreCase("battle")) {
                 startBattle();
             } else if (input.equalsIgnoreCase("stats")) {
                 stats.printGameStats();
             } else if(input.equalsIgnoreCase("profile")) {
-                System.out.println("Not implemented yet");
-            } else {
-                System.out.println("\tWrong input - choose again!");
+                viewEditProfile();
+            } else if(!input.equalsIgnoreCase("quit")){
+                wrongInputMade = true;
             }
         }while(!input.equalsIgnoreCase("quit"));
 
@@ -49,14 +58,44 @@ public class Game {
     public void startBattle()
     {
         Battle someBattle = new Battle();
+        someBattle.setUserOne(users.get(0));
+        someBattle.setUserTwo(users.get(1));
         someBattle.showBattleMenu();
+    }
+    public void viewEditProfile()
+    {
+        users.get(0).getProfile().printProfile();
+        // editing to be done
     }
     public void endGame()
     {
         printAsciiImage();
         System.out.println("Thank you for playing!");
     }
-    public boolean register()
+    public void signIn()
+    {
+        String input;
+        Scanner scanner = new Scanner(System.in);
+        boolean isLoggedIn = false;
+
+        System.out.println("\tProceed to login:");
+        System.out.println("\t\tType \"login\" to login into your account.");
+        System.out.println("\t\tType \"signup\" to create a new account.");
+
+        do {
+            input = scanner.nextLine();
+
+            if(input.equalsIgnoreCase("login")) {
+                isLoggedIn = login();
+            }else if(input.equalsIgnoreCase("signup")) {
+                isLoggedIn = signUp();
+            } else {
+                System.out.println("\tWrong input - type again!");
+            }
+        }while(!isLoggedIn);
+        System.out.println("You successfully logged in!");
+    }
+    public boolean signUp()
     {
         return false;
     }
@@ -64,8 +103,8 @@ public class Game {
     {
         System.out.println("Please login into your account!");
         Scanner scanner = new Scanner(System.in);
-        String username = "";
-        String password = "";
+        String username;
+        String password;
 
         // choose different actions in the game menu
         do
@@ -75,7 +114,13 @@ public class Game {
             System.out.print("Password: ");
             password = scanner.nextLine();
         }while(!username.equals("Vladan") && !password.equals("password"));
-        return false;
+        User newUser = new User();
+        User secondUser = new User();
+        users.add(newUser);
+        newUser.setProfile(new Profile(username, password));
+        users.add(secondUser);
+        secondUser.setProfile(new Profile("Stefan", password));
+        return true;
     }
     public void printAsciiImage()
     {
@@ -120,20 +165,21 @@ public class Game {
         System.out.println("Welcome to Monster Trading Cards Game!");
         System.out.println();
     }
-    public void printInstructions()
+    public void printInstructions(boolean wrongInputMade)
     {
         for(int i = 0; i < 4; i++) {
             System.out.println();
         }
         System.out.println("Game-Menu: ");
         System.out.println("\tChoose between following possibilities:");
-        System.out.println("\t\tType \"LOGIN\" to login into your account.");
-        System.out.println("\t\tType \"BATTLE\" for battling against an other player. --> only available if logged in");
-        System.out.println("\t\tType \"STATS\" for viewing your statistics.");
-        System.out.println("\t\tType \"PROFILE\" for viewing and editing your profile.");
-        System.out.println("\t\tType \"SIGNUP\" to create a new account.");
-        System.out.println("\t\tType \"QUIT\" for quiting the game.");
+        System.out.println("\t\tType \"battle\" for battling against an other player. --> only available if logged in");
+        System.out.println("\t\tType \"stats\" for viewing your statistics.");
+        System.out.println("\t\tType \"profile\" for viewing and editing your profile.");
+        System.out.println("\t\tType \"quit\" for quiting the game.");
         System.out.println("\tYour input can be case insensitive.");
+        if(wrongInputMade) {
+            System.out.println("\t-----Wrong input - choose again!-----");
+        }
         System.out.print("\t\tType here: ");
     }
     public static void clearScreen() {

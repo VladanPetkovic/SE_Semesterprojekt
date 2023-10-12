@@ -7,8 +7,12 @@ import lombok.Setter;
 @Setter
 public class User {
     private Profile profile;
-    private Card[] stack;
     private boolean isLoggedIn;
+
+    User()
+    {
+
+    }
     public void decreaseCoins()
     {
 
