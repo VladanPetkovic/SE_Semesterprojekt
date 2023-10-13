@@ -3,6 +3,8 @@ package org.example.game;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+
 @Getter
 @Setter
 public class User {
@@ -14,9 +16,9 @@ public class User {
     {
 
     }
-    public void decreaseCoins()
+    public void decreaseCoins(int decreaseValue)
     {
-
+        this.profile.setCoins(this.profile.getCoins() - decreaseValue);
     }
     public void manageCards()
     {
@@ -30,9 +32,9 @@ public class User {
     {
 
     }
-    public void addUserCard(Card[] cardsToBeAdded)
+    public void addCardsToStack(ArrayList<Card> cardsToBeAdded)
     {
-
+        this.profile.appendPackage(cardsToBeAdded);
     }
     public void printDeck()
     {

@@ -47,7 +47,7 @@ public class Game {
             if(input.equalsIgnoreCase("battle")) {
                 startBattle();
             } else if(input.equalsIgnoreCase("shop")) {
-                this.shop.shopMenu();
+                this.shop.shopMenu(users.get(0), users.get(1));
             }else if (input.equalsIgnoreCase("stats")) {
                 this.stats.printGameStats();
             } else if(input.equalsIgnoreCase("profile")) {

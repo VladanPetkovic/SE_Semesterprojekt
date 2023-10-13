@@ -1,17 +1,74 @@
 package org.example.game;
 
+import java.util.ArrayList;
+import java.util.Random;
 import java.util.Scanner;
 
 public class Shop {
-    public void purchaseCards()
+    private static final int cardsInPackage = 5;
+    private static final int priceForPackage = 5;
+    public void purchaseCards(User customer)
     {
+        // user has no money to afford one package of cards
+        if(customer.getProfile().getCoins() < 5) {
+            System.out.println("Not enough money available!");
+            return;
+        }
 
+        // decreasing user-money
+        customer.decreaseCoins(priceForPackage);
+        System.out.println("You paid 5 coins for one package!");
+        System.out.println("Your remaining coins: " + customer.getProfile().getCoins());
+
+        // setting new random package to user stack
+        customer.addCardsToStack(getRandomCards());
+    }
+    /**
+     *  getRandomCards() return an ArrayList of five random cards
+     *      random:
+     *          - MonsterCard or SpellCard
+     *          - damage-value
+     *          - ElementType
+     */
+    public ArrayList<Card> getRandomCards()
+    {
+        ArrayList<Card> pack = new ArrayList<>();
+        for(int i = 0; i < cardsInPackage; i++) {
+            Card newCard;
+            // get randomly a monster or spell card
+            Random random = new Random();
+            boolean isMonsterCard = random.nextBoolean();
+            // get a random damage
+            int randomDamage = random.nextInt(0,100);
+            int randomElement = random.nextInt(1,3);
+
+            // init new Cards with random ElementType,  random damage, random CardType
+            if(isMonsterCard) {
+                newCard = new CardMonster(randomDamage, getElementType(randomElement));
+            } else {
+                newCard = new CardSpell(randomDamage, getElementType(randomElement));
+            }
+
+            // adding to the package of cards
+            pack.add(newCard);
+        }
+        return pack;
+    }
+    private ElementType getElementType(int randomElement)
+    {
+        if(randomElement == 1) {
+            return ElementType.FIRE;
+        } else if(randomElement == 2) {
+            return ElementType.WATER;
+        } else {
+            return ElementType.NORMAL;
+        }
     }
     public void tradeCards(Card cardToBeRemoved)
     {
 
     }
-    public void shopMenu()
+    public void shopMenu(User userOne, User userTwo)
     {
         boolean wrongInputMade = false;
         Scanner scanner = new Scanner(System.in);
@@ -31,7 +88,8 @@ public class Shop {
             input = scanner.nextLine();
             // process the input
             if(input.equalsIgnoreCase("package")) {
-                System.out.println("buying some package");
+                purchaseCards(userOne);
+                purchaseCards(userTwo);     // FOR TESTING --> TO BE DONE
             } else if(input.equalsIgnoreCase("trade")) {
                 System.out.println("trading some cards");
             } else if(!input.equalsIgnoreCase("back")) {

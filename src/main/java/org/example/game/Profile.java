@@ -19,6 +19,14 @@ public class Profile {
         this.username = username;
         this.password = password;
     }
+    public void appendPackage(ArrayList<Card> cardsToBeAdded)
+    {
+        if(this.stack.isEmpty()) {
+            this.stack = cardsToBeAdded;
+        } else {
+            this.stack.addAll(cardsToBeAdded);
+        }
+    }
     public void printProfile()
     {
         System.out.println("Your Profile:");

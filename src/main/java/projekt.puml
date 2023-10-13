@@ -37,24 +37,24 @@ enum Result
     WIN
     TIE
 }
-class Package
+enum ElementType
 {
-    +{static} final int cardCount = 5
-    -Card[] cards
-    +Card[] chooseRandomCards()
+    FIRE
+    WATER
+    NORMAL
 }
 class Card
 {
     -String name
     +int final damage
-    -byte final elementType
     -boolean isInDeck
+    -ElementType type
     +String getCardName()
-    +byte getElementType()
     +boolean getIsCardInDeck()
+    +ElementType getElementType()
     +void setCardName()
-    +void setElementType()
     +void setCardInDeck()
+    +void setElementType()
 }
 class CardMonster
 {
@@ -80,6 +80,7 @@ class Battle
 }
 class Shop
 {
+    +{static} final int cardCount = 5
     +void purchaseCards()
     +void tradeCards(Card cardToBeRemoved)
     +void shopMenu()
@@ -120,7 +121,6 @@ User "1" o-- "0..*" Card : "owns"
 Game "1" *-- "0..*" Battle : "take place"
 Game "1" *-- "1" Statistics : "has"
 Game "1" *-- "2" User : "has"
-Package o-- "1..*" Card : "contains"
 Battle "1..*" *-- "2" User : "is battled"
 Result "1" *-- "1..*" Battle : "ends in"
 Statistics "1" o-- "1..*" User : "make"
@@ -128,4 +128,5 @@ Profile "1" *-- "1" User : "has"
 Shop "1" o-- "1..*" User : "buys Cards"
 Shop "1" o-- "1..*" Card : "sells"
 Game "1" *-- "1" Shop : "has"
+ElementType "1" *-- "0..*" Card : "is"
 @enduml
