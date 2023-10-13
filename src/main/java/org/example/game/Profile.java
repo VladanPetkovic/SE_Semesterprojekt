@@ -3,6 +3,8 @@ package org.example.game;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+
 @Getter
 @Setter
 public class Profile {
@@ -10,7 +12,7 @@ public class Profile {
     private String password;
     private int coins = 20;
     private int eloPoints = 100;
-    private Card[] stack;
+    private ArrayList<Card> stack = new ArrayList<>();
 
     Profile(String username, String password)
     {

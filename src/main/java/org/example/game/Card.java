@@ -7,7 +7,12 @@ import lombok.Setter;
 @Setter
 public class Card {
     private String name;
-    public static short damage;
+    public static int damage;
     private static byte elementType;
     private boolean isInDeck;
+
+    public void setCardInDeck()
+    {
+
+    }
 }

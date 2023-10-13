@@ -10,7 +10,6 @@ class User
     +void manageCards()
     +void addCardToDeck()
     +void addUserCard(Card[] cardsToBeAdded)
-    +void tradeCards(Card cardToBeRemoved)
     +void printDeck()
 }
 class Profile
@@ -50,7 +49,7 @@ class Card
     +int final damage
     -byte final elementType
     -boolean isInDeck
-    +int getCardName()
+    +String getCardName()
     +byte getElementType()
     +boolean getIsCardInDeck()
     +void setCardName()
@@ -77,13 +76,20 @@ class Battle
     +void showBattleMenu()
     +void startNewBattle()
     +void endOfBattle()
-    +void shop()
     +void setNewEloPoints()
+}
+class Shop
+{
+    +void purchaseCards()
+    +void tradeCards(Card cardToBeRemoved)
+    +void shopMenu()
+    +void printInstructions(boolean wrongInputMade)
 }
 class Game
 {
     -User users[]
     -Statistics stats
+    -Shop shop
     +void startGame()
     +void showMenu()
     +void startBattle()
@@ -119,4 +125,7 @@ Battle "1..*" *-- "2" User : "is battled"
 Result "1" *-- "1..*" Battle : "ends in"
 Statistics "1" o-- "1..*" User : "make"
 Profile "1" *-- "1" User : "has"
+Shop "1" o-- "1..*" User : "buys Cards"
+Shop "1" o-- "1..*" Card : "sells"
+Game "1" *-- "1" Shop : "has"
 @enduml

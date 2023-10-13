@@ -21,10 +21,10 @@ public class Battle {
             System.out.println();
         }
         System.out.println("Battle-Menu: ");
-        System.out.println("\t\tType \"START\" for starting a new battle.");
-        System.out.println("\t\tType \"SHOP\" for purchasing and trading cards.");
-        System.out.println("\t\tType \"INFO\" for viewing the battle instructions - how the game is played.");
-        System.out.println("\t\tType \"BACK\" for returning to the main menu.");
+        System.out.println("\t\tType \"start\" for starting a new battle.");
+        System.out.println("\t\tType \"deck\" to choose cards for your battling-deck.");
+        System.out.println("\t\tType \"info\" for viewing the battle instructions - how the game is played.");
+        System.out.println("\t\tType \"back\" for returning to the main menu.");
         System.out.println("\tYour input can be case insensitive.");
         if(wrongInputMade) {
             System.out.println("\t-----Wrong input - choose again!-----");
@@ -84,28 +84,27 @@ public class Battle {
             // process the input
             if(input.equalsIgnoreCase("start")) {
                 startOfBattle();
+            } else if(input.equalsIgnoreCase("deck")) {
+                userOne.manageCards();
             } else if(input.equalsIgnoreCase("info")) {
                 printBattleInformation();
                 scanner.nextLine();
-            } else if(input.equalsIgnoreCase("shop")) {
-                shop();
             } else if(!input.equalsIgnoreCase("back")) {
                 wrongInputMade = true;
             }
         }while(!input.equalsIgnoreCase("back"));
-
     }
     public void startOfBattle()
     {
+        if(!getUserOne().isDeckIsFull()) {
+            System.out.println("Please set cards from your stack into your deck!");
+            return;
+        }
 
     }
     public void endOfBattle()
     {
 
-    }
-    public void shop()
-    {
-        System.out.println("you are visiting the shop");
     }
     public void setNewEloPoints(int userOneElo, int userTwoElo, Result result)
     {

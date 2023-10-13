@@ -8,6 +8,7 @@ import lombok.Setter;
 public class User {
     private Profile profile;
     private boolean isLoggedIn;
+    private boolean deckIsFull = false;
 
     User()
     {
@@ -19,7 +20,11 @@ public class User {
     }
     public void manageCards()
     {
-
+        // check if stack is empty
+        if(this.profile.getStack().isEmpty()) {
+            System.out.println("You don't have any cards in your stack - purchase cards in the shop!");
+            return;
+        }
     }
     public void addCardToDeck()
     {
@@ -29,12 +34,9 @@ public class User {
     {
 
     }
-    public void tradeCards(Card cardToBeRemoved)
-    {
-
-    }
     public void printDeck()
     {
 
     }
+
 }

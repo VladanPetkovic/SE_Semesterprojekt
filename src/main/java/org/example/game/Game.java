@@ -15,12 +15,14 @@ public class Game {
 
     private ArrayList<User> users = new ArrayList<>();
     private Statistics stats;
+    private Shop shop;
 
 
     public void startGame()
     {
         printWelcomeImage();
-        stats = new Statistics();
+        this.stats = new Statistics();
+        this.shop = new Shop();
         clearScreen();
     }
     public void showMenu()
@@ -44,8 +46,10 @@ public class Game {
             // process the input
             if(input.equalsIgnoreCase("battle")) {
                 startBattle();
-            } else if (input.equalsIgnoreCase("stats")) {
-                stats.printGameStats();
+            } else if(input.equalsIgnoreCase("shop")) {
+                this.shop.shopMenu();
+            }else if (input.equalsIgnoreCase("stats")) {
+                this.stats.printGameStats();
             } else if(input.equalsIgnoreCase("profile")) {
                 viewEditProfile();
             } else if(!input.equalsIgnoreCase("quit")){
@@ -172,7 +176,8 @@ public class Game {
         }
         System.out.println("Game-Menu: ");
         System.out.println("\tChoose between following possibilities:");
-        System.out.println("\t\tType \"battle\" for battling against an other player. --> only available if logged in");
+        System.out.println("\t\tType \"battle\" for battling against an other player.");
+        System.out.println("\t\tType \"shop\" for purchasing and trading cards.");
         System.out.println("\t\tType \"stats\" for viewing your statistics.");
         System.out.println("\t\tType \"profile\" for viewing and editing your profile.");
         System.out.println("\t\tType \"quit\" for quiting the game.");
