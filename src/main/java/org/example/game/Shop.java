@@ -39,8 +39,8 @@ public class Shop {
             Random random = new Random();
             boolean isMonsterCard = random.nextBoolean();
             // get a random damage
-            int randomDamage = random.nextInt(0,100);
-            int randomElement = random.nextInt(1,3);
+            int randomDamage = random.nextInt(0,100 + 1);   // +1 needed to get value == 100
+            int randomElement = random.nextInt(1,3 + 1);    // 1, 2, 3
 
             // init new Cards with random ElementType,  random damage, random CardType
             if(isMonsterCard) {

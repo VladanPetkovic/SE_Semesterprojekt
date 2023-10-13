@@ -11,7 +11,7 @@ public class Card {
     private String name;
     private final int damage;
     private final ElementType elementType;
-    private boolean isInDeck;
+    private boolean isInDeck = false;
 
     Card(int damage, ElementType et) {
         this.damage = damage;

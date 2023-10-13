@@ -27,6 +27,15 @@ public class Profile {
             this.stack.addAll(cardsToBeAdded);
         }
     }
+    public int countCardsInDeck()
+    {
+        int cardsInDeck = 0;
+        for(Card card : stack) {
+            if(card.isInDeck())
+                cardsInDeck++;
+        }
+        return cardsInDeck;
+    }
     public void printProfile()
     {
         System.out.println("Your Profile:");
@@ -34,5 +43,6 @@ public class Profile {
         System.out.println("\tPassword: " + this.password);
         System.out.println("\tCoins: " + this.coins);
         System.out.println("\tElo-Points: " + this.eloPoints);
+        System.out.println("\tNumber of cards in stack: " + this.stack.size());
     }
 }

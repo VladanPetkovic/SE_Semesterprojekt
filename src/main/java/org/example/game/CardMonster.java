@@ -12,7 +12,7 @@ public class CardMonster extends Card {
     private String getRandomName()
     {
         Random random = new Random();
-        int randomName = random.nextInt(1,7);   // we have seven names
+        int randomName = random.nextInt(1,7 + 1);   // we have seven names
 
         if(randomName == 1) {
             return "Goblin";

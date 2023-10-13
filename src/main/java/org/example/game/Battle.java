@@ -96,7 +96,7 @@ public class Battle {
     }
     public void startOfBattle()
     {
-        if(!getUserOne().isDeckIsFull()) {
+        if(getUserOne().getCardsInDeck() != 4) {
             System.out.println("Please set cards from your stack into your deck!");
             return;
         }
@@ -128,7 +128,7 @@ public class Battle {
         //System.out.println("User Two: " + newEloUserTwo);
         //System.out.println("User One: " + newEloUserOne);
 
-        getUserOne().getProfile().setEloPoints(newEloUserOne);
-        getUserOne().getProfile().setEloPoints(newEloUserTwo);
+        this.userOne.getProfile().setEloPoints(newEloUserOne);
+        this.userTwo.getProfile().setEloPoints(newEloUserTwo);
     }
 }
