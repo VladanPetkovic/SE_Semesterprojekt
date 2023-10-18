@@ -1,20 +1,22 @@
 package org.example;
 
-import org.example.game.Game;
-import org.example.server.app.App;
-import org.example.server.server.Server;
+import org.example.backend.app.App;
+import org.example.backend.server.Server;
+import org.example.frontend.Game;
 
 import java.io.IOException;
 
-public class Main {
+public class
+Main {
     public static void main(String[] args)
     {
-        /**/
+
         Game game = new Game();
         game.startGame();
         game.signIn();
         game.showMenu();
         game.endGame();
+
 
 
         /*
@@ -25,7 +27,8 @@ public class Main {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        */
 
-         */
+
     }
 }

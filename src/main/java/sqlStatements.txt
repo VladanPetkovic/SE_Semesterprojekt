@@ -1,0 +1,60 @@
+//https://dbdiagram.io/d
+
+Table users {
+  user_id SERIAL [PRIMARY KEY]
+  name VARCHAR(20)
+  elopoints integer
+  coins integer
+}
+
+Table battles {
+  battle_id SERIAL [PRIMARY KEY]
+  user_winner_id integer
+  user_looser_id integer
+  log VARCHAR(2000)
+  time VARCHAR(20)
+}
+
+Table cards {
+  card_id SERIAL [PRIMARY KEY]
+  fk_user_id integer
+  name VARCHAR(20)
+  damage SMALLINT
+  element_type SMALLINT
+  isInDeck BOOLEAN
+}
+
+Ref: cards.fk_user_id > users.user_id // many-to-one
+Ref: users.user_id < battles.user_winner_id
+Ref: users.user_id < battles.user_looser_id
+
+
+--------------------------------------------------------------
+SQL-Statements:
+-- table user
+CREATE TABLE IF NOT EXISTS "users" (
+        user_id SERIAL PRIMARY KEY,
+        name VARCHAR(20) NOT NULL,
+        elopoints INT NOT NULL DEFAULT '100',
+        coins INT NOT NULL DEFAULT '20'
+);
+-- table battle
+CREATE TABLE IF NOT EXISTS "battles" (
+        battle_id SERIAL PRIMARY KEY,
+        user_winner_id INT NOT NULL,
+        user_looser_id INT NOT NULL,
+        log VARCHAR(2000) NOT NULL,
+        time VARCHAR(20) NOT NULL,
+        FOREIGN KEY (user_winner_id) REFERENCES users (user_id),
+        FOREIGN KEY (user_looser_id) REFERENCES users (user_id)
+);
+-- table card
+CREATE TABLE IF NOT EXISTS "cards" (
+        card_id SERIAL PRIMARY KEY,
+        fk_user_id INT NOT NULL,
+        name VARCHAR(20) NOT NULL,
+        damage SMALLINT NOT NULL,
+        element_type SMALLINT NOT NULL,
+        isInDeck BOOLEAN NOT NULL,
+        FOREIGN KEY (fk_user_id) REFERENCES users (user_id)
+);
