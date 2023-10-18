@@ -1,7 +1,7 @@
 package org.example.backend.app.controllers;
 
-import org.example.backend.app.models.City;
-import org.example.backend.app.services.CityService;
+import org.example.backend.app.models.User;
+import org.example.backend.app.services.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.example.backend.http.ContentType;
 import org.example.backend.http.HttpStatus;
@@ -12,24 +12,24 @@ import org.example.backend.server.Response;
 
 import java.util.List;
 
-public class CityController extends Controller {
+public class UserController extends Controller {
     @Setter(AccessLevel.PRIVATE)
     @Getter(AccessLevel.PRIVATE)
-    private CityService cityService;
+    private UserService userService;
 
-    public CityController(CityService cityService) {
-        setCityService(cityService);
+    public UserController(UserService userService) {
+        setUserService(userService);
     }
 
-    // DELETE /cities/:id -> löscht eine city mit der id
-    // POST /cities -> erstellt eine neue city
-    // PUT/PATCH /cities/:id -> updated eine city mit der id
-    // GET /cities/:id -> die eine city zurück mit der id
-    // GET /cities -> alle cities zurück
-    public Response getCities() {
+    // DELETE /users/:id -> deletes a user with the 'id'
+    // POST /users -> makes a new user
+    // PUT/PATCH /users/:id -> updates a user with the 'id'
+    // GET /users/:id -> return one user with the 'id'
+    // GET /users -> return all users
+    public Response getUsers() {
         try {
-            List cityData = getCityService().getCities();
-            String cityDataJSON = getObjectMapper().writeValueAsString(cityData);
+            List userData = getUserService().getUsers();
+            String cityDataJSON = getObjectMapper().writeValueAsString(userData);
 
             return new Response(
                 HttpStatus.OK,
@@ -46,17 +46,17 @@ public class CityController extends Controller {
         }
     }
 
-    // GET /cities/:id
-    public void getCityById(int id) {
+    // GET /users/:id
+    public void getUserById(int id) {
 
     }
 
-    // POST /cities
-    public Response createCity(String body) {
+    // POST /users
+    public Response createUser(String body) {
         try {
             System.out.println(body);
-            City newCity = getObjectMapper().readValue(body, City.class);
-            getCityService().addCity(newCity);
+            User newUser = getObjectMapper().readValue(body, User.class);
+            getUserService().addUser(newUser);
             return new Response(
                     HttpStatus.CREATED,
                     ContentType.JSON,
@@ -74,8 +74,8 @@ public class CityController extends Controller {
 
     }
 
-    // DELETE /cities/:id
-    public void deleteCity(int id) {
+    // DELETE /users/:id
+    public void deleteUser(int id) {
 
     }
 }

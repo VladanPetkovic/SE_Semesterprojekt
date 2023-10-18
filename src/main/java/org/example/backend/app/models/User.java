@@ -8,14 +8,16 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class City {
-    @JsonAlias({"id"})
-    int id;
+public class User {
+    @JsonAlias({"user_id"})
+    int user_id;
     @JsonAlias({"name"})
     String name;
-    @JsonAlias({"population"})
-    int population;
+    @JsonAlias({"elopoints"})
+    int elopoints;
+    @JsonAlias({"coins"})
+    int coins;
 
     // Jackson needs the default constructor
-    public City() {}
+    public User() {}
 }

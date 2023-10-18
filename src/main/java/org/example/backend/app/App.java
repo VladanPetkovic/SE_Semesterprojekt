@@ -1,7 +1,7 @@
 package org.example.backend.app;
 
-import org.example.backend.app.controllers.CityController;
-import org.example.backend.app.services.CityService;
+import org.example.backend.app.controllers.UserController;
+import org.example.backend.app.services.UserService;
 import org.example.backend.http.ContentType;
 import org.example.backend.http.HttpStatus;
 import lombok.AccessLevel;
@@ -13,10 +13,10 @@ import org.example.backend.server.ServerApp;
 
 public class App implements ServerApp {
     @Setter(AccessLevel.PRIVATE)
-    private CityController cityController;
+    private UserController userController;
 
     public App() {
-        setCityController(new CityController(new CityService()));
+        setUserController(new UserController(new UserService()));
     }
 
     public Response handleRequest(Request request) {
@@ -24,14 +24,14 @@ public class App implements ServerApp {
 
         switch (request.getMethod()) {
             case GET: {
-                if (request.getPathname().equals("/cities")) {
-                    return this.cityController.getCities();
+                if (request.getPathname().equals("/users")) {
+                    return this.userController.getUsers();
                 }
             }
             case POST: {
-                if (request.getPathname().equals("/cities")) {
+                if (request.getPathname().equals("/users")) {
                     String body = request.getBody();
-                    return this.cityController.createCity(body);
+                    return this.userController.createUser(body);
                 }
             }
         }
