@@ -5,12 +5,13 @@ import org.example.backend.server.Server;
 import org.example.frontend.Game;
 
 import java.io.IOException;
+import java.util.Scanner;
 
 public class
 Main {
     public static void main(String[] args)
     {
-
+/*
         Game game = new Game();
         game.startGame();
         game.signIn();
@@ -28,7 +29,5 @@ Main {
             e.printStackTrace();
         }
         */
-
-
     }
 }
