@@ -11,16 +11,6 @@ public class
 Main {
     public static void main(String[] args)
     {
-/*
-        Game game = new Game();
-        game.startGame();
-        game.signIn();
-        game.showMenu();
-        game.endGame();
-
-
-
-        /*
         App app = new App();
         Server server = new Server(app, 7777);
         try {
@@ -28,6 +18,6 @@ Main {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        */
+
     }
 }

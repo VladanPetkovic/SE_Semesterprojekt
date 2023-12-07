@@ -19,14 +19,6 @@ public class Profile {
         this.username = username;
         this.password = password;
     }
-    public void appendPackage(ArrayList<Card> cardsToBeAdded)
-    {
-        if(this.stack.isEmpty()) {
-            this.stack = cardsToBeAdded;
-        } else {
-            this.stack.addAll(cardsToBeAdded);
-        }
-    }
     public int countCardsInDeck()
     {
         int cardsInDeck = 0;
@@ -35,14 +27,5 @@ public class Profile {
                 cardsInDeck++;
         }
         return cardsInDeck;
-    }
-    public void printProfile()
-    {
-        System.out.println("Your Profile:");
-        System.out.println("\tUsername: " + this.username);
-        System.out.println("\tPassword: " + this.password);
-        System.out.println("\tCoins: " + this.coins);
-        System.out.println("\tElo-Points: " + this.eloPoints);
-        System.out.println("\tNumber of cards in stack: " + this.stack.size());
     }
 }
