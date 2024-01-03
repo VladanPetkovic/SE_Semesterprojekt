@@ -28,6 +28,10 @@ public class UserRepository implements Repository {
         return getUserDao().read(name);
     }
 
+    public User get(String name, String password) {
+        return getUserDao().read(name, password);
+    }
+
     @Override
     public ArrayList<User> getAll() {
         return getUserDao().readAll();

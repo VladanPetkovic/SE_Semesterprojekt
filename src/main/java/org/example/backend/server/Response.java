@@ -14,6 +14,7 @@ public class Response {
     private String statusMessage;
     private String contentType;
     private String content;
+    private String authorization;
 
     public Response(HttpStatus httpStatus, ContentType contentType, String content) {
         setStatusCode(httpStatus.getCode());
@@ -22,10 +23,19 @@ public class Response {
         setContent(content);
     }
 
+    public Response(HttpStatus httpStatus, ContentType contentType, String authorization, String content) {
+        setStatusCode(httpStatus.getCode());
+        setContentType(contentType.getType());
+        setStatusMessage(httpStatus.getMessage());
+        setContent(content);
+        setAuthorization(authorization);
+    }
+
     protected String build() {
         return "HTTP/1.1 " + getStatusCode() + " " + getStatusMessage() + "\r\n" +
                 "Content-Type: " + getContentType() + "\r\n" +
                 "Content-Length: " + getContent().length() + "\r\n" +
+                "Authorization: " + getAuthorization() + "\r\n" +
                 "\r\n" +
                 getContent();
     }

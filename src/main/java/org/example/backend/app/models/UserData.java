@@ -10,13 +10,13 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class UserData {
-    @JsonAlias({"name"})
+    @JsonAlias({"Name"})
     @Setter(AccessLevel.PRIVATE)
     String name;
-    @JsonAlias({"bio"})
+    @JsonAlias({"Bio"})
     @Setter(AccessLevel.PRIVATE)
     String bio;
-    @JsonAlias({"image"})
+    @JsonAlias({"Image"})
     @Setter(AccessLevel.PRIVATE)
     String image;
 

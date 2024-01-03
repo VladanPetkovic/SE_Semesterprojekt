@@ -5,6 +5,7 @@ import org.example.backend.app.models.UserCredentials;
 import org.example.backend.app.models.UserData;
 import org.example.backend.app.repository.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import org.example.backend.http.Authorization;
 import org.example.backend.http.ContentType;
 import org.example.backend.http.HttpStatus;
 import lombok.AccessLevel;
@@ -13,6 +14,7 @@ import lombok.Setter;
 import org.example.backend.server.Response;
 
 import java.util.List;
+import java.util.Objects;
 
 public class UserController extends Controller {
     @Setter(AccessLevel.PRIVATE)
@@ -39,7 +41,7 @@ public class UserController extends Controller {
             return new Response(
                 HttpStatus.INTERNAL_SERVER_ERROR,
                 ContentType.JSON,
-                "{ \" data\":null, \"error\": \"Internal Server Error\" }"
+                "{ \"data\":null, \"error\": \"Internal Server Error\" }"
             );
         }
     }
@@ -60,7 +62,7 @@ public class UserController extends Controller {
                 return new Response(
                         HttpStatus.NOT_FOUND,
                         ContentType.JSON,
-                        "{ \" data\":null, \"error\": \"User not found\" }"
+                        "{ \"data\": null, \"error\": \"User not found\" }"
                 );
             }
         } catch (JsonProcessingException e) {
@@ -68,35 +70,37 @@ public class UserController extends Controller {
             return new Response(
                     HttpStatus.INTERNAL_SERVER_ERROR,
                     ContentType.JSON,
-                    "{ \" data\":null, \"error\": \"Internal Server Error\" }"
+                    "{ \"data\": null, \"error\": \"Internal Server Error\" }"
             );
         }
     }
 
-    public Response updateUser(String body, String oldUsername) {
+    public Response updateUser(String body, String oldUsername, String token) {
         try {
             // check, if oldUsername in db
-            User user = getUserRepository().get(oldUsername);
+            User oldUser = getUserRepository().get(oldUsername);
 
             // check, if new username not in db
             UserData newUserData = getObjectMapper().readValue(body, UserData.class);
-            User checkUser = getUserRepository().get(newUserData.getName());
+            User newUser = getUserRepository().get(newUserData.getName());
 
-            if(user != null && checkUser == null) {
-                getUserRepository().update(user, newUserData);
+            if(oldUser != null) {
+                getUserRepository().update(oldUser, newUserData);
                 System.out.println("Updating user.");
 
                 return new Response(
                         HttpStatus.OK,
                         ContentType.JSON,
-                        "{ \"data\":null, \" error\":null }"
+                        new Authorization().getAuth(newUser.getName()),
+                        "{ \"data\": null, \" error\": null }"
                 );
             } else {
                 System.out.println("User not found for updating.");
                 return new Response(
                         HttpStatus.NOT_FOUND,
                         ContentType.JSON,
-                        "{ \" data\":null, \"error\": \"User not found.\" }"
+                        token,
+                        "{ \"data\": null, \"error\": \"User not found.\" }"
                 );
             }
         } catch(JsonProcessingException e)
@@ -105,7 +109,7 @@ public class UserController extends Controller {
             return new Response(
                     HttpStatus.INTERNAL_SERVER_ERROR,
                     ContentType.JSON,
-                    "{ \" data\":null, \"error\": \"Internal Server Error\" }"
+                    "{ \"data\": null, \"error\": \"Internal Server Error\" }"
             );
         }
     }
@@ -122,14 +126,14 @@ public class UserController extends Controller {
                 return new Response(
                         HttpStatus.CREATED,
                         ContentType.JSON,
-                        "{ \"data\":null, \" error\":null }"
+                        "{ \"data\": null, \" error\": null }"
                 );
             } else {
                 System.out.println("User already exists.");
                 return new Response(
                         HttpStatus.CONFLICT,
                         ContentType.JSON,
-                        "{ \" data\":null, \"error\": \"User with same username already registered\" }"
+                        "{ \"data\": null, \"error\": \"User with same username already registered\" }"
                 );
             }
         } catch(JsonProcessingException e)
@@ -138,7 +142,40 @@ public class UserController extends Controller {
             return new Response(
                     HttpStatus.INTERNAL_SERVER_ERROR,
                     ContentType.JSON,
-                    "{ \" data\":null, \"error\": \"Internal Server Error\" }"
+                    "{ \"data\": null, \"error\": \"Internal Server Error\" }"
+            );
+        }
+    }
+
+    public Response loginUser(String body) {
+        try {
+            UserCredentials newUser = getObjectMapper().readValue(body, UserCredentials.class);
+            // check, if username and password correct
+            User checkUser = getUserRepository().get(newUser.getUsername(), newUser.getPassword());
+
+            if(checkUser != null) {
+                System.out.println("User Login successful.");
+                return new Response(
+                        HttpStatus.OK,
+                        ContentType.JSON,
+                        new Authorization().getAuth(newUser.getUsername()),
+                        "{ \"data\":null, \" error\":null }"
+                );
+            } else {
+                System.out.println("Invalid username/password provided.");
+                return new Response(
+                        HttpStatus.UNAUTHORIZED,
+                        ContentType.JSON,
+                        "{ \"data\":null, \"error\": \"Invalid username/password provided\" }"
+                );
+            }
+        } catch(JsonProcessingException e)
+        {
+            e.printStackTrace();
+            return new Response(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    ContentType.JSON,
+                    "{ \"data\":null, \"error\": \"Internal Server Error\" }"
             );
         }
     }

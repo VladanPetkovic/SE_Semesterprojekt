@@ -10,16 +10,16 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class UserStats {
-    @JsonAlias({"name"})
+    @JsonAlias({"Name"})
     @Setter(AccessLevel.PRIVATE)
     String name;
-    @JsonAlias({"elo"})
+    @JsonAlias({"Elo"})
     @Setter(AccessLevel.PRIVATE)
     int elo;
-    @JsonAlias({"wins"})
+    @JsonAlias({"Wins"})
     @Setter(AccessLevel.PRIVATE)
     int wins;
-    @JsonAlias({"losses"})
+    @JsonAlias({"Losses"})
     @Setter(AccessLevel.PRIVATE)
     int losses;
 

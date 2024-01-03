@@ -105,6 +105,38 @@ public class UserDao implements DAO<User> {
         return user;
     }
 
+    public User read(String name, String password) {
+        User user = null;
+
+        String readStmt =
+                "SELECT user_id, name, elopoints, coins, password, bio, image " +
+                        "FROM users " +
+                        "WHERE name = ? AND password = ?;";
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(readStmt);
+            preparedStatement.setString(1, name);
+            preparedStatement.setString(2, password);
+            try (ResultSet result = preparedStatement.executeQuery()) {
+                if (result.next()) {
+                    user = new User(
+                            result.getInt("user_id"),
+                            result.getString("name"),
+                            result.getInt("elopoints"),
+                            result.getInt("coins"),
+                            result.getString("password"),
+                            result.getString("bio"),
+                            result.getString("image")
+                    );
+                }
+                setUserCache(null);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return user;
+    }
+
     @Override
     public void update(User user) {
         String updateStmt =

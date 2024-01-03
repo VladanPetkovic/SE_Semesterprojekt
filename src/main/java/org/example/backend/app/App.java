@@ -57,18 +57,19 @@ public class App implements ServerApp {
                     if(body.isEmpty()) {
                         break;
                     }
-                    return this.userController.createUser(body);
+                    return this.userController.loginUser(body);
                 }
             }
             case PUT: {
                 if (request.getPathname().matches("/users/\\w+")) {
                     String body = request.getBody();
                     String passedUsername = request.getPathname().substring("/users/".length());
+                    String token = request.getAuthorization();
 
-                    if(passedUsername.isEmpty() || body.isEmpty()) {
+                    if(passedUsername.isEmpty() || body.isEmpty() || token.isEmpty()) {
                         break;
                     }
-                    return this.userController.updateUser(body, passedUsername);
+                    return this.userController.updateUser(body, passedUsername, token);
                 }
             }
         }
