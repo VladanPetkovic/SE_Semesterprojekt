@@ -9,21 +9,15 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 
-public class Card {
+public class CardJSON {
     // total length 36 chars of UUID
-    @JsonAlias({"card_id"})
+    @JsonAlias({"Id"})
     String card_id;
-    @JsonAlias({"fk_user_id"})
-    int fk_user_id;
-    @JsonAlias({"name"})
+    @JsonAlias({"Name"})
     String name;
-    @JsonAlias({"damage"})
-    int damage;
-    @JsonAlias({"element_type"})
-    int element_type;
-    @JsonAlias({"isInDeck"})
-    boolean isInDeck;
+    @JsonAlias({"Damage"})
+    float damage;
 
     // Jackson needs the default constructor
-    public Card() {}
+    public CardJSON() {}
 }
