@@ -1,7 +1,9 @@
 package org.example.backend.app.controllers;
 
 import org.example.backend.app.models.User;
-import org.example.backend.app.services.UserService;
+import org.example.backend.app.models.UserCredentials;
+import org.example.backend.app.models.UserData;
+import org.example.backend.app.repository.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.example.backend.http.ContentType;
 import org.example.backend.http.HttpStatus;
@@ -15,67 +17,129 @@ import java.util.List;
 public class UserController extends Controller {
     @Setter(AccessLevel.PRIVATE)
     @Getter(AccessLevel.PRIVATE)
-    private UserService userService;
+    private UserRepository userRepository;
 
-    public UserController(UserService userService) {
-        setUserService(userService);
+    public UserController(UserRepository userRepository) {
+        setUserRepository(userRepository);
     }
 
-    // DELETE /users/:id -> deletes a user with the 'id'
-    // POST /users -> makes a new user
-    // PUT/PATCH /users/:id -> updates a user with the 'id'
-    // GET /users/:id -> return one user with the 'id'
-    // GET /users -> return all users
+    // for testing purpose
     public Response getUsers() {
         try {
-            List userData = getUserService().getUsers();
-            String cityDataJSON = getObjectMapper().writeValueAsString(userData);
+            List userData = getUserRepository().getAll();
+            String userDataJSON = getObjectMapper().writeValueAsString(userData);
 
             return new Response(
                 HttpStatus.OK,
                 ContentType.JSON,
-                "{ \"data\": " + cityDataJSON + ", \"error\": null }"
+                "{ \"data\": " + userDataJSON + ", \"error\": null }"
             );
         } catch (JsonProcessingException e) {
             e.printStackTrace();
             return new Response(
                 HttpStatus.INTERNAL_SERVER_ERROR,
                 ContentType.JSON,
-                "{ \"error\": \"Internal Server Error\", \"data\": null }"
+                "{ \" data\":null, \"error\": \"Internal Server Error\" }"
             );
         }
     }
 
-    // GET /users/:id
-    public void getUserById(int id) {
+    public Response getUserByName(String name) {
+        try {
+            User user = getUserRepository().get(name);
 
+            if(user != null) {
+                UserData responseUser = new UserData(user);
+                String userDataJSON = getObjectMapper().writeValueAsString(responseUser);
+                return new Response(
+                        HttpStatus.OK,
+                        ContentType.JSON,
+                        "{ \"data\": " + userDataJSON + ", \"error\": null }"
+                );
+            } else {
+                return new Response(
+                        HttpStatus.NOT_FOUND,
+                        ContentType.JSON,
+                        "{ \" data\":null, \"error\": \"User not found\" }"
+                );
+            }
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return new Response(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    ContentType.JSON,
+                    "{ \" data\":null, \"error\": \"Internal Server Error\" }"
+            );
+        }
     }
 
-    // POST /users
-    public Response createUser(String body) {
+    public Response updateUser(String body, String oldUsername) {
         try {
-            System.out.println(body);
-            User newUser = getObjectMapper().readValue(body, User.class);
-            getUserService().addUser(newUser);
-            return new Response(
-                    HttpStatus.CREATED,
-                    ContentType.JSON,
-                    "{\"data\": " + body + ", \" error\":null }"
-            );
+            // check, if oldUsername in db
+            User user = getUserRepository().get(oldUsername);
+
+            // check, if new username not in db
+            UserData newUserData = getObjectMapper().readValue(body, UserData.class);
+            User checkUser = getUserRepository().get(newUserData.getName());
+
+            if(user != null && checkUser == null) {
+                getUserRepository().update(user, newUserData);
+                System.out.println("Updating user.");
+
+                return new Response(
+                        HttpStatus.OK,
+                        ContentType.JSON,
+                        "{ \"data\":null, \" error\":null }"
+                );
+            } else {
+                System.out.println("User not found for updating.");
+                return new Response(
+                        HttpStatus.NOT_FOUND,
+                        ContentType.JSON,
+                        "{ \" data\":null, \"error\": \"User not found.\" }"
+                );
+            }
         } catch(JsonProcessingException e)
         {
             e.printStackTrace();
             return new Response(
                     HttpStatus.INTERNAL_SERVER_ERROR,
                     ContentType.JSON,
-                    "{\"error\": \"Internal Server Error\", \" error\":null }"
+                    "{ \" data\":null, \"error\": \"Internal Server Error\" }"
             );
         }
-
     }
 
-    // DELETE /users/:id
-    public void deleteUser(int id) {
+    public Response createUser(String body) {
+        try {
+            UserCredentials newUser = getObjectMapper().readValue(body, UserCredentials.class);
+            // check, if user in db
+            User checkUser = getUserRepository().get(newUser.getUsername());
 
+            if(checkUser == null) {
+                getUserRepository().add(new User(newUser));
+                System.out.println("Creating new user.");
+                return new Response(
+                        HttpStatus.CREATED,
+                        ContentType.JSON,
+                        "{ \"data\":null, \" error\":null }"
+                );
+            } else {
+                System.out.println("User already exists.");
+                return new Response(
+                        HttpStatus.CONFLICT,
+                        ContentType.JSON,
+                        "{ \" data\":null, \"error\": \"User with same username already registered\" }"
+                );
+            }
+        } catch(JsonProcessingException e)
+        {
+            e.printStackTrace();
+            return new Response(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    ContentType.JSON,
+                    "{ \" data\":null, \"error\": \"Internal Server Error\" }"
+            );
+        }
     }
 }

@@ -9,6 +9,7 @@ public enum HttpStatus {
     CREATED(201, "CREATED"),
     BAD_REQUEST(400, "Bad Request"),
     NOT_FOUND(404, "Not Found"),
+    CONFLICT(409, "Data conflict"),
     INTERNAL_SERVER_ERROR(500, "Internal Server Error");
 
     @Getter
