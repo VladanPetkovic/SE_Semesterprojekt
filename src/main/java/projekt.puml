@@ -109,11 +109,6 @@ class Statistics
     +void printGameStats()
     +void printBattleStats(int battleId)
 }
-class Database
-{
-    +boolean registerUser(String username, String password)
-    +boolean loginUser(String username, String password)
-}
 
 CardMonster <|-- Card
 CardSpell <|-- Card

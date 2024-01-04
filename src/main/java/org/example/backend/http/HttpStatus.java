@@ -8,7 +8,8 @@ public enum HttpStatus {
     OK(200, "OK"),
     CREATED(201, "CREATED"),
     BAD_REQUEST(400, "Bad Request"),
-    UNAUTHORIZED(401, "Unauthorized"),
+    UNAUTHORIZED_ERROR(401, "Unauthorized Error"),
+    FORBIDDEN_ERROR(403, "Forbidden Error"),
     NOT_FOUND(404, "Not Found"),
     CONFLICT(409, "Data conflict"),
     INTERNAL_SERVER_ERROR(500, "Internal Server Error");

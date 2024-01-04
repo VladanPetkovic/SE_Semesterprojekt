@@ -4,8 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 import java.lang.Math;
 
-@Getter
-@Setter
 public class Battle {
     private User userOne;
     private User userTwo;

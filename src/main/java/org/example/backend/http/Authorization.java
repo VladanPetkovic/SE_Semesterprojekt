@@ -16,7 +16,7 @@ public class Authorization {
         setType("Bearer");
     }
 
-    public String getAuth(String token) {
-        return getType() + " " + token + "-mtcgToken";
+    public String getAuth(String name) {
+        return getType() + " " + name + "-mtcgToken";
     }
 }

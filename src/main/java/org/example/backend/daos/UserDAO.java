@@ -11,7 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class UserDao implements DAO<User> {
+public class UserDAO implements DAO<User> {
     @Getter(AccessLevel.PRIVATE)
     @Setter(AccessLevel.PRIVATE)
     Connection connection;
@@ -19,7 +19,7 @@ public class UserDao implements DAO<User> {
     @Setter(AccessLevel.PRIVATE)
     ArrayList<User> userCache;
 
-    public UserDao(Connection connection) {
+    public UserDAO(Connection connection) {
         setConnection(connection);
     }
 
@@ -198,7 +198,7 @@ public class UserDao implements DAO<User> {
 
     @Override
     public ArrayList<User> readAll() {
-        ArrayList<User> users = new ArrayList();
+        ArrayList<User> users = new ArrayList<User>();
 
         String readStmt =
                 "SELECT user_id, name, elopoints, coins, password, bio, image " +

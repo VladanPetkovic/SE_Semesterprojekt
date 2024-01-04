@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public interface Repository<T> {
     T get(int id);
     ArrayList<T> getAll();
-    void add(User user);
-    void update(User user);
+    void add(T object);
+    void update(T object);
     void remove(int id);
 }

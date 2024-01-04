@@ -12,43 +12,32 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.backend.server.Response;
-
-import java.util.List;
-import java.util.Objects;
+import org.example.frontend.Game;
 
 public class UserController extends Controller {
     @Setter(AccessLevel.PRIVATE)
     @Getter(AccessLevel.PRIVATE)
     private UserRepository userRepository;
+    @Setter(AccessLevel.PRIVATE)
+    @Getter(AccessLevel.PRIVATE)
+    private Game game;
 
-    public UserController(UserRepository userRepository) {
+    public UserController(UserRepository userRepository, Game game) {
         setUserRepository(userRepository);
+        setGame(game);
     }
 
-    // for testing purpose
-    public Response getUsers() {
-        try {
-            List userData = getUserRepository().getAll();
-            String userDataJSON = getObjectMapper().writeValueAsString(userData);
-
-            return new Response(
-                HttpStatus.OK,
-                ContentType.JSON,
-                "{ \"data\": " + userDataJSON + ", \"error\": null }"
-            );
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            return new Response(
-                HttpStatus.INTERNAL_SERVER_ERROR,
-                ContentType.JSON,
-                "{ \"data\":null, \"error\": \"Internal Server Error\" }"
-            );
-        }
-    }
-
-    public Response getUserByName(String name) {
+    public Response getUserByName(String name, String token) {
         try {
             User user = getUserRepository().get(name);
+
+            if(!checkAuthorization(token)) {
+                return new Response(
+                        HttpStatus.UNAUTHORIZED_ERROR,
+                        ContentType.JSON,
+                        "{ \"data\": null, \"error\": \"Access token is missing or invalid\" }"
+                );
+            }
 
             if(user != null) {
                 UserData responseUser = new UserData(user);
@@ -56,12 +45,14 @@ public class UserController extends Controller {
                 return new Response(
                         HttpStatus.OK,
                         ContentType.JSON,
+                        new Authorization().getAuth(user.getName()),
                         "{ \"data\": " + userDataJSON + ", \"error\": null }"
                 );
             } else {
                 return new Response(
                         HttpStatus.NOT_FOUND,
                         ContentType.JSON,
+                        token,
                         "{ \"data\": null, \"error\": \"User not found\" }"
                 );
             }
@@ -77,22 +68,29 @@ public class UserController extends Controller {
 
     public Response updateUser(String body, String oldUsername, String token) {
         try {
+            // check, if user has privileges
+            if(!checkAuthorization(token)) {
+                return new Response(
+                        HttpStatus.UNAUTHORIZED_ERROR,
+                        ContentType.JSON,
+                        "{ \"data\": null, \"error\": \"Access token is missing or invalid\" }"
+                );
+            }
+
             // check, if oldUsername in db
             User oldUser = getUserRepository().get(oldUsername);
 
-            // check, if new username not in db
-            UserData newUserData = getObjectMapper().readValue(body, UserData.class);
-            User newUser = getUserRepository().get(newUserData.getName());
-
             if(oldUser != null) {
+                // update old user with new data
+                UserData newUserData = getObjectMapper().readValue(body, UserData.class);
                 getUserRepository().update(oldUser, newUserData);
                 System.out.println("Updating user.");
 
                 return new Response(
                         HttpStatus.OK,
                         ContentType.JSON,
-                        new Authorization().getAuth(newUser.getName()),
-                        "{ \"data\": null, \" error\": null }"
+                        new Authorization().getAuth(newUserData.getName()),
+                        "{ \"data\": null, \"error\": null }"
                 );
             } else {
                 System.out.println("User not found for updating.");
@@ -126,7 +124,7 @@ public class UserController extends Controller {
                 return new Response(
                         HttpStatus.CREATED,
                         ContentType.JSON,
-                        "{ \"data\": null, \" error\": null }"
+                        "{ \"data\": null, \"error\": null }"
                 );
             } else {
                 System.out.println("User already exists.");
@@ -155,16 +153,17 @@ public class UserController extends Controller {
 
             if(checkUser != null) {
                 System.out.println("User Login successful.");
+                getGame().addUserToGame(checkUser);
                 return new Response(
                         HttpStatus.OK,
                         ContentType.JSON,
                         new Authorization().getAuth(newUser.getUsername()),
-                        "{ \"data\":null, \" error\":null }"
+                        "{ \"data\":null, \"error\":null }"
                 );
             } else {
                 System.out.println("Invalid username/password provided.");
                 return new Response(
-                        HttpStatus.UNAUTHORIZED,
+                        HttpStatus.UNAUTHORIZED_ERROR,
                         ContentType.JSON,
                         "{ \"data\":null, \"error\": \"Invalid username/password provided\" }"
                 );
@@ -178,5 +177,9 @@ public class UserController extends Controller {
                     "{ \"data\":null, \"error\": \"Internal Server Error\" }"
             );
         }
+    }
+
+    public boolean checkAuthorization(String token) {
+        return getGame().checkPlayerToken(token, false);
     }
 }

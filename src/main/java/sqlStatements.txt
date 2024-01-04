@@ -53,11 +53,10 @@ CREATE TABLE IF NOT EXISTS "battles" (
 );
 -- table card
 CREATE TABLE IF NOT EXISTS "cards" (
-        card_id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-        fk_user_id INT NOT NULL,
+        card_id VARCHAR(40) PRIMARY KEY,
+        user_id INT,
         name VARCHAR(20) NOT NULL,
-        damage SMALLINT NOT NULL,
-        element_type SMALLINT NOT NULL,
-        isInDeck BOOLEAN NOT NULL,
-        FOREIGN KEY (fk_user_id) REFERENCES users (user_id)
+        damage FLOAT NOT NULL,
+        element_type INT NOT NULL,
+        isInDeck BOOLEAN NOT NULL
 );

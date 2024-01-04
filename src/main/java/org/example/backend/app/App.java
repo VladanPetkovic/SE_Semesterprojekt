@@ -1,9 +1,12 @@
 package org.example.backend.app;
 
+import org.example.backend.app.controllers.CardController;
 import org.example.backend.app.controllers.UserController;
+import org.example.backend.app.repository.CardRepository;
 import org.example.backend.app.repository.UserRepository;
 import org.example.backend.app.services.DatabaseService;
-import org.example.backend.daos.UserDao;
+import org.example.backend.daos.CardDAO;
+import org.example.backend.daos.UserDAO;
 import org.example.backend.http.ContentType;
 import org.example.backend.http.HttpStatus;
 import lombok.AccessLevel;
@@ -11,36 +14,48 @@ import lombok.Setter;
 import org.example.backend.server.Request;
 import org.example.backend.server.Response;
 import org.example.backend.server.ServerApp;
+import org.example.frontend.Game;
 
 
 public class App implements ServerApp {
     @Setter(AccessLevel.PRIVATE)
     private UserController userController;
+    @Setter(AccessLevel.PRIVATE)
+    private CardController cardController;
+    @Setter(AccessLevel.PRIVATE)
+    private Game game;
 
     public App() {
+        // init database-service
         DatabaseService databaseService = new DatabaseService();
 
-        UserDao userDao = new UserDao(databaseService.getConnection());
-        UserRepository userRepository = new UserRepository(userDao);
+        // init game
+        setGame(new Game());
 
-        setUserController(new UserController(userRepository));
+        // init user controller
+        UserDAO userDao = new UserDAO(databaseService.getConnection());
+        UserRepository userRepository = new UserRepository(userDao);
+        setUserController(new UserController(userRepository, this.game));
+
+        // init card controller
+        CardDAO cardDAO = new CardDAO(databaseService.getConnection());
+        CardRepository cardRepository = new CardRepository(cardDAO);
+        setCardController(new CardController(cardRepository, this.game));
+
     }
 
     public Response handleRequest(Request request) {
-
-
         switch (request.getMethod()) {
             case GET: {
                 String path = request.getPathname();
-                if (path.equals("/users")) {
-                    return this.userController.getUsers();
-                } else if(path.matches("/users/\\w+")) {
+                if(path.matches("/users/\\w+")) {
                     String passedUsername = path.substring("/users/".length());
+                    String token = request.getAuthorization();
 
                     if(passedUsername.isEmpty()) {
                         break;
                     }
-                    return this.userController.getUserByName(passedUsername);
+                    return this.userController.getUserByName(passedUsername, token);
                 }
             }
             case POST: {
@@ -58,6 +73,14 @@ public class App implements ServerApp {
                         break;
                     }
                     return this.userController.loginUser(body);
+                } else if(request.getPathname().equals("/packages")) {
+                    String body = request.getBody();
+                    String token = request.getAuthorization();
+
+                    if(body.isEmpty()) {
+                        break;
+                    }
+                    return this.cardController.createPackage(body, token);
                 }
             }
             case PUT: {
@@ -66,7 +89,7 @@ public class App implements ServerApp {
                     String passedUsername = request.getPathname().substring("/users/".length());
                     String token = request.getAuthorization();
 
-                    if(passedUsername.isEmpty() || body.isEmpty() || token.isEmpty()) {
+                    if(passedUsername.isEmpty() || body.isEmpty()) {
                         break;
                     }
                     return this.userController.updateUser(body, passedUsername, token);

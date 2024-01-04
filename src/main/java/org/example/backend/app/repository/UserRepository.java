@@ -4,18 +4,17 @@ import lombok.AccessLevel;
 import lombok.Setter;
 import lombok.Getter;
 import org.example.backend.app.models.User;
-import org.example.backend.app.models.UserCredentials;
 import org.example.backend.app.models.UserData;
-import org.example.backend.daos.UserDao;
+import org.example.backend.daos.UserDAO;
 
 import java.util.ArrayList;
 
-public class UserRepository implements Repository {
+public class UserRepository implements Repository<User> {
     @Setter(AccessLevel.PRIVATE)
     @Getter(AccessLevel.PRIVATE)
-    UserDao userDao;
+    UserDAO userDao;
 
-    public UserRepository(UserDao userDao) {
+    public UserRepository(UserDAO userDao) {
         setUserDao(userDao);
     }
 
