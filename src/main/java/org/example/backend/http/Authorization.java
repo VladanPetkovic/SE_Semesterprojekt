@@ -19,4 +19,8 @@ public class Authorization {
     public String getAuth(String name) {
         return getType() + " " + name + "-mtcgToken";
     }
+
+    public String getUsernameFromToken(String token) {
+        return token.substring(7, token.length() - 10);
+    }
 }

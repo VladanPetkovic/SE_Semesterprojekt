@@ -7,6 +7,7 @@ import org.example.backend.app.repository.UserRepository;
 import org.example.backend.app.services.DatabaseService;
 import org.example.backend.daos.CardDAO;
 import org.example.backend.daos.UserDAO;
+import org.example.backend.http.Authorization;
 import org.example.backend.http.ContentType;
 import org.example.backend.http.HttpStatus;
 import lombok.AccessLevel;
@@ -19,6 +20,8 @@ import org.example.frontend.Game;
 
 public class App implements ServerApp {
     @Setter(AccessLevel.PRIVATE)
+    private DatabaseService databaseService;
+    @Setter(AccessLevel.PRIVATE)
     private UserController userController;
     @Setter(AccessLevel.PRIVATE)
     private CardController cardController;
@@ -27,7 +30,7 @@ public class App implements ServerApp {
 
     public App() {
         // init database-service
-        DatabaseService databaseService = new DatabaseService();
+        this.databaseService = new DatabaseService();
 
         // init game
         setGame(new Game());
@@ -56,6 +59,15 @@ public class App implements ServerApp {
                         break;
                     }
                     return this.userController.getUserByName(passedUsername, token);
+                } else if(path.equals("/cards")) {
+                    String token = request.getAuthorization();
+
+                    return this.cardController.getCards(token, this.databaseService);
+                } else if(path.equals("/deck")) {
+                    String token = request.getAuthorization();
+                    // plain/json ignored for now
+
+                    return this.cardController.getDeck(token, this.databaseService);
                 }
             }
             case POST: {
@@ -81,6 +93,10 @@ public class App implements ServerApp {
                         break;
                     }
                     return this.cardController.createPackage(body, token);
+                } else if(request.getPathname().equals("/transactions/packages")) {
+                    String token = request.getAuthorization();
+
+                    return this.cardController.acquirePackage(token, this.databaseService);
                 }
             }
             case PUT: {
@@ -93,6 +109,14 @@ public class App implements ServerApp {
                         break;
                     }
                     return this.userController.updateUser(body, passedUsername, token);
+                } else if(request.getPathname().equals("/deck")) {
+                    String body = request.getBody();
+                    String token = request.getAuthorization();
+
+                    if(body.isEmpty()) {
+                        break;
+                    }
+                    return this.cardController.updateDeck(token, body, this.databaseService);
                 }
             }
         }

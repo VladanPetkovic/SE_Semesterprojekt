@@ -4,7 +4,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.backend.app.models.Card;
-import org.example.backend.app.models.User;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -82,7 +81,7 @@ public class CardDAO implements DAO<Card> {
     @Override
     public void update(Card card) {
         String updateStmt =
-                "UPDATE users " +
+                "UPDATE cards " +
                 "SET user_id = ?, name = ?, damage = ?, element_type = ?, isindeck = ? " +
                 "WHERE card_id = ?";
         try {
@@ -93,6 +92,60 @@ public class CardDAO implements DAO<Card> {
             preparedStatement.setInt(4, card.getElement_type());
             preparedStatement.setBoolean(5, card.getIsInDeck());
             preparedStatement.setString(6, card.getCard_id());
+            preparedStatement.executeUpdate();
+            setCardCache(null);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void update(int user_id) {
+        String updateStmt =
+                "UPDATE cards " +
+                "SET user_id = ? " +
+                "WHERE user_id = 0 " +
+                "AND card_id IN (" +
+                    "SELECT card_id " +
+                    "FROM cards " +
+                    "WHERE user_id = 0 " +
+                    "LIMIT 5" +
+                ");";
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(updateStmt);
+            preparedStatement.setInt(1, user_id);
+            preparedStatement.executeUpdate();
+            setCardCache(null);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void update(String card_id) {
+        String updateStmt =
+                "UPDATE cards " +
+                "SET isindeck = TRUE " +
+                "WHERE card_id = ?;";
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(updateStmt);
+            preparedStatement.setString(1, card_id);
+            preparedStatement.executeUpdate();
+            setCardCache(null);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void removeDeck(int user_id) {
+        String updateStmt =
+                "UPDATE cards " +
+                "SET isindeck = FALSE " +
+                "WHERE user_id = ?;";
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(updateStmt);
+            preparedStatement.setInt(1, user_id);
             preparedStatement.executeUpdate();
             setCardCache(null);
         } catch (SQLException e) {
@@ -149,6 +202,38 @@ public class CardDAO implements DAO<Card> {
         return null;
     }
 
+    public ArrayList<Card> readPackage() {
+        ArrayList<Card> cards = new ArrayList<Card>();
+
+        String readStmt =
+                "SELECT * " +
+                "FROM cards " +
+                "WHERE user_id = 0 " +
+                "LIMIT 5;";
+        try {
+            PreparedStatement preparedStatement = getConnection().prepareStatement(readStmt);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while(resultSet.next()) {
+                Card newCard = new Card(
+                        resultSet.getString(1),
+                        resultSet.getInt(2),
+                        resultSet.getString(3),
+                        resultSet.getFloat(4),
+                        resultSet.getInt(5),
+                        resultSet.getBoolean(6)
+                );
+                cards.add(newCard);
+            }
+            setCardCache(cards);
+            return cards;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
     public ArrayList<Card> readAll(int user_id) {
         ArrayList<Card> cards = new ArrayList<Card>();
 
@@ -156,6 +241,38 @@ public class CardDAO implements DAO<Card> {
                 "SELECT * " +
                 "FROM cards " +
                 "WHERE user_id = ?;";
+        try {
+            PreparedStatement preparedStatement = getConnection().prepareStatement(readStmt);
+            preparedStatement.setInt(1, user_id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while(resultSet.next()) {
+                Card newCard = new Card(
+                        resultSet.getString(1),
+                        resultSet.getInt(2),
+                        resultSet.getString(3),
+                        resultSet.getFloat(4),
+                        resultSet.getInt(5),
+                        resultSet.getBoolean(6)
+                );
+                cards.add(newCard);
+            }
+            setCardCache(cards);
+            return cards;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public ArrayList<Card> readDeck(int user_id) {
+        ArrayList<Card> cards = new ArrayList<Card>();
+
+        String readStmt =
+                "SELECT * " +
+                "FROM cards " +
+                "WHERE user_id = ? AND isindeck = TRUE;";
         try {
             PreparedStatement preparedStatement = getConnection().prepareStatement(readStmt);
             preparedStatement.setInt(1, user_id);

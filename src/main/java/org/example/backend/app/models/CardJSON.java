@@ -24,4 +24,15 @@ public class CardJSON {
 
     // Jackson needs the default constructor
     public CardJSON() {}
+
+    public CardJSON(Card other) {
+        setCard_id(other.getCard_id());
+        setName(other.getName());
+        setDamage(other.getDamage());
+    }
+    public CardJSON(org.example.frontend.Card other) {
+        setCard_id(other.getId());
+        setName(other.getName());
+        setDamage(other.getDamage());
+    }
 }

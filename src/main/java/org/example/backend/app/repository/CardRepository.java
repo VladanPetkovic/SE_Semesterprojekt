@@ -36,6 +36,28 @@ public class CardRepository implements Repository<Card> {
         return getCardDAO().readAll(user_id);
     }
 
+    public ArrayList<Card> getDeck(int user_id) {
+        return getCardDAO().readDeck(user_id);
+    }
+
+    public void updateDeck(String card_id) {
+        // sets card_id in deck = true
+        getCardDAO().update(card_id);
+    }
+
+    public void removeDeck(int user_id) {
+        // sets all deck = false for a user_id
+        getCardDAO().removeDeck(user_id);
+    }
+
+    public ArrayList<Card> getPackage() {
+        return getCardDAO().readPackage();
+    }
+
+    public void updatePackage(int user_id) {
+        getCardDAO().update(user_id);
+    }
+
     @Override
     public void add(Card card) {
         getCardDAO().create(card);

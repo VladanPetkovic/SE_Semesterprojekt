@@ -43,4 +43,13 @@ public class Game {
         return false;
     }
 
+    public User getUser(String token) {
+        for(User user : users) {
+            if(Objects.equals(user.getProfile().getToken(), token)) {
+                return user;
+            }
+        }
+        return null;
+    }
+
 }

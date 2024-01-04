@@ -159,6 +159,22 @@ public class UserDAO implements DAO<User> {
         }
     }
 
+    public void update(int coins, int user_id) {
+        String updateStmt =
+                "UPDATE users " +
+                "SET coins = ? " +
+                "WHERE user_id = ?";
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(updateStmt);
+            preparedStatement.setInt(1, coins);
+            preparedStatement.setInt(2, user_id);
+            preparedStatement.executeUpdate();
+            setUserCache(null);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void update(int user_id, String newUsername, String newBio, String newImage) {
         String updateStmt =
                 "UPDATE users " +

@@ -18,7 +18,6 @@ public class Profile {
     private int eloPoints = 100;
     private String bio;
     private String image;
-    private ArrayList<Card> stack = new ArrayList<>();
 
     public Profile(User other) {
         setUser_id(other.getUser_id());
@@ -29,15 +28,5 @@ public class Profile {
         setEloPoints(other.getElopoints());
         setBio(other.getBio());
         setImage(other.getImage());
-    }
-
-    public int countCardsInDeck()
-    {
-        int cardsInDeck = 0;
-        for(Card card : stack) {
-            if(card.isInDeck())
-                cardsInDeck++;
-        }
-        return cardsInDeck;
     }
 }
