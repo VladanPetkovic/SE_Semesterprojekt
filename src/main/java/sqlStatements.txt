@@ -60,3 +60,22 @@ CREATE TABLE IF NOT EXISTS "cards" (
         element_type INT NOT NULL,
         isInDeck BOOLEAN NOT NULL
 );
+
+
+---------------------------------------
+
+test inserts
+-- Example 1
+INSERT INTO battles (user_winner_id, user_looser_id, log, time) VALUES (10,11, 'Battle log 1', '2024-01-01 12:30:00');
+
+-- Example 2
+INSERT INTO battles (user_winner_id, user_looser_id, log, time) VALUES (33, 10, 'Battle log 2', '2024-01-02 14:45:00');
+
+-- Example 3
+INSERT INTO battles (user_winner_id, user_looser_id, log, time) VALUES (10, 11, 'Battle log 3', '2024-01-03 10:15:00');
+
+-- Example 4
+INSERT INTO battles (user_winner_id, user_looser_id, log, time) VALUES (10, 33, 'Battle log 4', '2024-01-04 18:20:00');
+
+-- Example 5
+INSERT INTO battles (user_winner_id, user_looser_id, log, time) VALUES (10, 33, 'Battle log 5', '2024-01-05 16:10:00');

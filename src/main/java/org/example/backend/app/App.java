@@ -1,13 +1,15 @@
 package org.example.backend.app;
 
+import org.example.backend.app.controllers.BattleController;
 import org.example.backend.app.controllers.CardController;
 import org.example.backend.app.controllers.UserController;
+import org.example.backend.app.repository.BattleRepository;
 import org.example.backend.app.repository.CardRepository;
 import org.example.backend.app.repository.UserRepository;
 import org.example.backend.app.services.DatabaseService;
+import org.example.backend.daos.BattleDAO;
 import org.example.backend.daos.CardDAO;
 import org.example.backend.daos.UserDAO;
-import org.example.backend.http.Authorization;
 import org.example.backend.http.ContentType;
 import org.example.backend.http.HttpStatus;
 import lombok.AccessLevel;
@@ -25,6 +27,8 @@ public class App implements ServerApp {
     private UserController userController;
     @Setter(AccessLevel.PRIVATE)
     private CardController cardController;
+    @Setter(AccessLevel.PRIVATE)
+    private BattleController battleController;
     @Setter(AccessLevel.PRIVATE)
     private Game game;
 
@@ -45,6 +49,10 @@ public class App implements ServerApp {
         CardRepository cardRepository = new CardRepository(cardDAO);
         setCardController(new CardController(cardRepository, this.game));
 
+        // init game controller
+        BattleDAO battleDAO = new BattleDAO((databaseService.getConnection()));
+        BattleRepository battleRepository = new BattleRepository((battleDAO));
+        setBattleController(new BattleController(battleRepository, this.game));
     }
 
     public Response handleRequest(Request request) {
