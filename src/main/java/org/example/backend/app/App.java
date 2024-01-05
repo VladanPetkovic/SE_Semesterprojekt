@@ -63,11 +63,15 @@ public class App implements ServerApp {
                     String token = request.getAuthorization();
 
                     return this.cardController.getCards(token, this.databaseService);
-                } else if(path.equals("/deck")) {
+                } else if(path.matches("/deck(\\?format=(json|plain))?")) {
                     String token = request.getAuthorization();
-                    // plain/json ignored for now
+                    // plain/json
+                    String passedFormat = null;
+                    if(request.getParams().length() >= 11) {
+                        passedFormat = request.getParams().substring(7);
+                    }
 
-                    return this.cardController.getDeck(token, this.databaseService);
+                    return this.cardController.getDeck(token, passedFormat, this.databaseService);
                 }
             }
             case POST: {

@@ -219,7 +219,7 @@ public class CardController extends Controller {
         }
     }
 
-    public Response getDeck(String token, DatabaseService databaseService) {
+    public Response getDeck(String token, String passedFormat, DatabaseService databaseService) {
         try {
             // check, if login authorized
             if(token.isEmpty() || !checkAuthorization(token, false)) {
@@ -256,14 +256,23 @@ public class CardController extends Controller {
             //getGame().getUser(token).printCards();
 
             // response
-            String cardsDataJSON = getObjectMapper().writeValueAsString(responseData);
-            return new Response(
-                    HttpStatus.OK,
-                    ContentType.JSON,
-                    token,
-                    "{ \"data\": " + cardsDataJSON + ", \"error\": null }"
-            );
-
+            if(Objects.equals(passedFormat, "plain")) {
+                String cardsDataPlain = getObjectMapper().writeValueAsString(responseData).replaceAll("\"", "");
+                return new Response(
+                        HttpStatus.OK,
+                        ContentType.JSON,
+                        token,
+                        cardsDataPlain
+                );
+            } else {
+                String cardsDataJSON = getObjectMapper().writeValueAsString(responseData);
+                return new Response(
+                        HttpStatus.OK,
+                        ContentType.JSON,
+                        token,
+                        "{ \"data\": " + cardsDataJSON + ", \"error\": null }"
+                );
+            }
         } catch(JsonProcessingException e)
         {
             e.printStackTrace();

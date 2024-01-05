@@ -43,7 +43,6 @@ public class Request {
                 String[] splitFirstLine = line.split(" ");
                 Boolean hasParams = splitFirstLine[1].indexOf("?") != -1;
 
-
                 setMethod(getMethodFromInputLine(splitFirstLine));
                 setPathname(getPathnameFromInputLine(splitFirstLine, hasParams));
                 setParams(getParamsFromInputLine(splitFirstLine, hasParams));
