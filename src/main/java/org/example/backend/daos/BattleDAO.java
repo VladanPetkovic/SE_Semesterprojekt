@@ -24,15 +24,13 @@ public class BattleDAO implements DAO<Battle> {
     @Override
     public void create(Battle battle) {
         String insertStmt =
-                "INSERT INTO battles (battle_id, user_winner_id, user_looser_id, log, time) " +
-                "VALUES (?, ?, ?, ?, ?);";
+                "INSERT INTO battles (battle_id, user_winner_id, user_looser_id) " +
+                "VALUES (?, ?, ?);";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(insertStmt);
             preparedStatement.setInt(1, battle.getBattle_id());
             preparedStatement.setInt(2, battle.getUser_winner_id());
             preparedStatement.setInt(3, battle.getUser_looser_id());
-            preparedStatement.setString(4, battle.getLog());
-            preparedStatement.setString(5, battle.getTime());
             preparedStatement.executeUpdate();
         } catch(Exception e) {
             e.printStackTrace();
@@ -55,9 +53,7 @@ public class BattleDAO implements DAO<Battle> {
                     battle = new Battle(
                             result.getInt("battle_id"),
                             result.getInt("user_winner_id"),
-                            result.getInt("user_looser_id"),
-                            result.getString("log"),
-                            result.getString("time")
+                            result.getInt("user_looser_id")
                     );
                 }
                 setBattleCache(null);
@@ -119,15 +115,13 @@ public class BattleDAO implements DAO<Battle> {
     public void update(Battle battle) {
         String updateStmt =
                 "UPDATE battles " +
-                "SET user_winner_id = ?, user_looser_id = ?, log = ?, time = ? " +
+                "SET user_winner_id = ?, user_looser_id = ? " +
                 "WHERE battle_id = ?";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(updateStmt);
             preparedStatement.setInt(1, battle.getUser_winner_id());
             preparedStatement.setInt(2, battle.getUser_looser_id());
-            preparedStatement.setString(3, battle.getLog());
-            preparedStatement.setString(4, battle.getTime());
-            preparedStatement.setInt(5, battle.getBattle_id());
+            preparedStatement.setInt(3, battle.getBattle_id());
             preparedStatement.executeUpdate();
             setBattleCache(null);
         } catch (SQLException e) {
@@ -164,9 +158,7 @@ public class BattleDAO implements DAO<Battle> {
                 Battle newBattle = new Battle(
                         resultSet.getInt(1),
                         resultSet.getInt(2),
-                        resultSet.getInt(3),
-                        resultSet.getString(4),
-                        resultSet.getString(5)
+                        resultSet.getInt(3)
                 );
                 battles.add(newBattle);
             }

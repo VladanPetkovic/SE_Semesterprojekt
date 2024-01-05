@@ -46,8 +46,6 @@ CREATE TABLE IF NOT EXISTS "battles" (
         battle_id SERIAL PRIMARY KEY,
         user_winner_id INT NOT NULL,
         user_looser_id INT NOT NULL,
-        log VARCHAR(2000) NOT NULL,
-        time VARCHAR(20) NOT NULL,
         FOREIGN KEY (user_winner_id) REFERENCES users (user_id),
         FOREIGN KEY (user_looser_id) REFERENCES users (user_id)
 );

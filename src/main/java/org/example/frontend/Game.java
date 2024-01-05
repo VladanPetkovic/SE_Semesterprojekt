@@ -25,21 +25,21 @@ public class Game {
     }
 
     public boolean checkPlayerToken(String token, boolean onlyAdmin) {
-        for(User user : getUsers()) {
-            // only admin has access
-            if(onlyAdmin) {
-                if(Objects.equals(user.getProfile().getToken(), "Bearer admin-mtcgToken")) {
-                    return true;
-                }
-            } else { // admin and user with correct token has access
-                if(
-                        Objects.equals(user.getProfile().getToken(), token) ||
-                        Objects.equals(user.getProfile().getToken(), "Bearer admin-mtcgToken")
-                ) {
+        // only admin has access
+        if(onlyAdmin) {
+            if(Objects.equals(token, "Bearer admin-mtcgToken")) {
+                return true;
+            }
+        } else {
+            for(User user : getUsers()) {
+                // admin and user with correct token has access
+                if(Objects.equals(user.getProfile().getToken(), token) ||
+                    Objects.equals(token, "Bearer admin-mtcgToken")) {
                     return true;
                 }
             }
         }
+
         return false;
     }
 
@@ -47,6 +47,15 @@ public class Game {
         for(User user : users) {
             if(Objects.equals(user.getProfile().getToken(), token)) {
                 return user;
+            }
+        }
+        return null;
+    }
+
+    public String getUsernameFromToken(String token) {
+        for(User user : users) {
+            if(Objects.equals(user.getProfile().getToken(), token)) {
+                return user.getProfile().getUsername();
             }
         }
         return null;

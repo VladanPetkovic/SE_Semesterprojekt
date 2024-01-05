@@ -80,6 +80,14 @@ public class App implements ServerApp {
                     }
 
                     return this.cardController.getDeck(token, passedFormat, this.databaseService);
+                } else if(path.equals("/stats")) {
+                    String token = request.getAuthorization();
+
+                    return this.battleController.getStats(token, this.databaseService);
+                } else if(path.equals("/scoreboard")) {
+                    String token = request.getAuthorization();
+
+                    return this.battleController.getScoreboard(token, this.databaseService);
                 }
             }
             case POST: {

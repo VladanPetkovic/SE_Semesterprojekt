@@ -218,7 +218,8 @@ public class UserDAO implements DAO<User> {
 
         String readStmt =
                 "SELECT user_id, name, elopoints, coins, password, bio, image " +
-                "FROM users;";
+                "FROM users " +
+                "ORDER BY elopoints DESC;";
         try {
             PreparedStatement preparedStatement = getConnection().prepareStatement(readStmt);
             ResultSet resultSet = preparedStatement.executeQuery();

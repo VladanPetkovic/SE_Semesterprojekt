@@ -26,4 +26,11 @@ public class UserStats {
 
     // Jackson needs the default constructor
     public UserStats() {}
+
+    public UserStats(User other, int wins, int losses) {
+        setName(other.getName());
+        setElo(other.getElopoints());
+        setWins(wins);
+        setLosses(losses);
+    }
 }

@@ -20,12 +20,6 @@ public class Battle {
     @JsonAlias({"user_looser_id"})
     @Setter(AccessLevel.PRIVATE)
     int user_looser_id;
-    @JsonAlias({"log"})
-    @Setter(AccessLevel.PRIVATE)
-    String log;
-    @JsonAlias({"time"})
-    @Setter(AccessLevel.PRIVATE)
-    String time;
 
     // Jackson needs the default constructor
     public Battle() {}

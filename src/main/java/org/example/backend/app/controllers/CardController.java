@@ -106,7 +106,7 @@ public class CardController extends Controller {
             }
 
             // check, if enough money available
-            String name = new Authorization().getUsernameFromToken(token);
+            String name = this.game.getUsernameFromToken(token);
             User user = new UserRepository(new UserDAO(databaseService.getConnection())).get(name);
 
             if(user.getCoins() < 5) {
@@ -175,7 +175,7 @@ public class CardController extends Controller {
             }
 
             // check if user has cards
-            String name = new Authorization().getUsernameFromToken(token);
+            String name = this.game.getUsernameFromToken(token);
             User user = new UserRepository(new UserDAO(databaseService.getConnection())).get(name);
             ArrayList<Card> userCards = getCardRepository().getAll(user.getUser_id());
             ArrayList<CardJSON> responseData = new ArrayList<CardJSON>();
@@ -231,7 +231,7 @@ public class CardController extends Controller {
             }
 
             // check if user has cards in deck
-            String name = new Authorization().getUsernameFromToken(token);
+            String name = this.game.getUsernameFromToken(token);
             User user = new UserRepository(new UserDAO(databaseService.getConnection())).get(name);
             ArrayList<Card> userCards = getCardRepository().getDeck(user.getUser_id());
             ArrayList<CardJSON> responseData = new ArrayList<CardJSON>();
@@ -308,7 +308,7 @@ public class CardController extends Controller {
             }
 
             // check, if all cards exists and are owned by the user
-            String name = new Authorization().getUsernameFromToken(token);
+            String name = this.game.getUsernameFromToken(token);
             User user = new UserRepository(new UserDAO(databaseService.getConnection())).get(name);
             ArrayList<Card> checkCards = getCardRepository().getAll(user.getUser_id());
 

@@ -5,8 +5,6 @@ import lombok.Setter;
 import org.example.backend.app.models.User;
 import org.example.backend.http.Authorization;
 
-import java.util.ArrayList;
-
 @Getter
 @Setter
 public class Profile {

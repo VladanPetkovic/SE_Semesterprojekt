@@ -45,7 +45,7 @@ public class UserController extends Controller {
                 return new Response(
                         HttpStatus.OK,
                         ContentType.JSON,
-                        new Authorization().getAuth(user.getName()),
+                        token,
                         "{ \"data\": " + userDataJSON + ", \"error\": null }"
                 );
             } else {
@@ -82,14 +82,17 @@ public class UserController extends Controller {
 
             if(oldUser != null) {
                 // update old user with new data
+                // backend
                 UserData newUserData = getObjectMapper().readValue(body, UserData.class);
                 getUserRepository().update(oldUser, newUserData);
+                // frontend
+                this.game.getUser(token).getProfile().setUsername(newUserData.getName());
                 System.out.println("Updating user.");
 
                 return new Response(
                         HttpStatus.OK,
                         ContentType.JSON,
-                        new Authorization().getAuth(newUserData.getName()),
+                        token,
                         "{ \"data\": null, \"error\": null }"
                 );
             } else {
