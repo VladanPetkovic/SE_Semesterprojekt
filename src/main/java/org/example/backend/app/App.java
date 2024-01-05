@@ -56,23 +56,30 @@ public class App implements ServerApp {
     }
 
     public Response handleRequest(Request request) {
+        String token = request.getAuthorization();
+        String body = request.getBody();
+
         switch (request.getMethod()) {
             case GET: {
+
+                // just testing
+                try {
+                    Thread.sleep(10000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+
                 String path = request.getPathname();
                 if(path.matches("/users/\\w+")) {
                     String passedUsername = path.substring("/users/".length());
-                    String token = request.getAuthorization();
 
                     if(passedUsername.isEmpty()) {
                         break;
                     }
                     return this.userController.getUserByName(passedUsername, token);
                 } else if(path.equals("/cards")) {
-                    String token = request.getAuthorization();
-
                     return this.cardController.getCards(token, this.databaseService);
                 } else if(path.matches("/deck(\\?format=(json|plain))?")) {
-                    String token = request.getAuthorization();
                     // plain/json
                     String passedFormat = null;
                     if(request.getParams().length() >= 11) {
@@ -81,58 +88,40 @@ public class App implements ServerApp {
 
                     return this.cardController.getDeck(token, passedFormat, this.databaseService);
                 } else if(path.equals("/stats")) {
-                    String token = request.getAuthorization();
-
                     return this.battleController.getStats(token, this.databaseService);
                 } else if(path.equals("/scoreboard")) {
-                    String token = request.getAuthorization();
-
                     return this.battleController.getScoreboard(token, this.databaseService);
                 }
             }
             case POST: {
                 if (request.getPathname().equals("/users")) {
-                    String body = request.getBody();
-
                     if(body.isEmpty()) {
                         break;
                     }
                     return this.userController.createUser(body);
                 } else if(request.getPathname().equals("/sessions")) {
-                    String body = request.getBody();
-
                     if(body.isEmpty()) {
                         break;
                     }
                     return this.userController.loginUser(body);
                 } else if(request.getPathname().equals("/packages")) {
-                    String body = request.getBody();
-                    String token = request.getAuthorization();
-
                     if(body.isEmpty()) {
                         break;
                     }
                     return this.cardController.createPackage(body, token);
                 } else if(request.getPathname().equals("/transactions/packages")) {
-                    String token = request.getAuthorization();
-
                     return this.cardController.acquirePackage(token, this.databaseService);
                 }
             }
             case PUT: {
                 if (request.getPathname().matches("/users/\\w+")) {
-                    String body = request.getBody();
                     String passedUsername = request.getPathname().substring("/users/".length());
-                    String token = request.getAuthorization();
 
                     if(passedUsername.isEmpty() || body.isEmpty()) {
                         break;
                     }
                     return this.userController.updateUser(body, passedUsername, token);
                 } else if(request.getPathname().equals("/deck")) {
-                    String body = request.getBody();
-                    String token = request.getAuthorization();
-
                     if(body.isEmpty()) {
                         break;
                     }
