@@ -61,14 +61,6 @@ public class App implements ServerApp {
 
         switch (request.getMethod()) {
             case GET: {
-
-                // just testing
-                try {
-                    Thread.sleep(10000);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-
                 String path = request.getPathname();
                 if(path.matches("/users/\\w+")) {
                     String passedUsername = path.substring("/users/".length());
@@ -111,6 +103,8 @@ public class App implements ServerApp {
                     return this.cardController.createPackage(body, token);
                 } else if(request.getPathname().equals("/transactions/packages")) {
                     return this.cardController.acquirePackage(token, this.databaseService);
+                } else if(request.getPathname().equals("/battles")) {
+                    return this.battleController.runBattle(token, this.databaseService);
                 }
             }
             case PUT: {

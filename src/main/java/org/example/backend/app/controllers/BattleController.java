@@ -119,6 +119,63 @@ public class BattleController extends Controller {
         }
     }
 
+    public Response runBattle(String token, DatabaseService databaseService) {
+        // check, if login authorized
+        if(token.isEmpty() || !checkAuthorization(token, false)) {
+            return new Response(
+                    HttpStatus.UNAUTHORIZED_ERROR,
+                    ContentType.JSON,
+                    "{ \"data\": null, \"error\": \"Access token is missing or is invalid\" }"
+            );
+        }
+
+        String responseData = null;
+
+        // if no other player is in battle lobby
+        if(!this.game.checkBattleLobby()) {
+            startBattleWithFirstUser(token);
+        } else {
+            responseData = startBattleWithSecondUser(token);
+        }
+
+        // updating both users data
+            // winner, looser
+            // cards changed owner
+
+        return new Response(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                ContentType.JSON,
+                token,
+                "{ \"data\": " + responseData + ", \"error\": \"Internal Server Error\" }"
+        );
+    }
+
+    public synchronized void startBattleWithFirstUser(String token) {
+        // set this player in lobby
+        this.game.getUser(token).setInBattleLobby(true);
+        try {
+            this.wait();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        this.game.getUser(token).setInBattleLobby(false);
+    }
+
+    public synchronized String startBattleWithSecondUser(String token) {
+        this.game.getUser(token).setInBattleLobby(true);
+
+        org.example.frontend.User secondUser = this.game.getUser(token);
+        org.example.frontend.User firstUser = this.game.getUser(token);
+        // notify other player and proceed with battle
+        this.notifyAll();
+
+        this.game.getUser(token).setInBattleLobby(false);
+
+        // get second user id
+
+        // start battle
+        return this.game.runNewBattle(firstUser, secondUser);
+    }
 
     public boolean checkAuthorization(String token, boolean onlyAdmin) {
         return getGame().checkPlayerToken(token, onlyAdmin);

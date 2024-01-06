@@ -12,6 +12,7 @@ import java.util.Objects;
 public class User {
     private Profile profile;
     private ArrayList<Card> stack = new ArrayList<Card>();
+    boolean isInBattleLobby = false;
 
     User()
     {

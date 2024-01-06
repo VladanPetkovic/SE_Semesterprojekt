@@ -66,7 +66,7 @@ public class UserController extends Controller {
         }
     }
 
-    public Response updateUser(String body, String oldUsername, String token) {
+    public synchronized Response updateUser(String body, String oldUsername, String token) {
         try {
             // check, if user has privileges
             if(!checkAuthorization(token)) {
@@ -115,7 +115,7 @@ public class UserController extends Controller {
         }
     }
 
-    public Response createUser(String body) {
+    public synchronized Response createUser(String body) {
         try {
             UserCredentials newUser = getObjectMapper().readValue(body, UserCredentials.class);
             // check, if user in db
@@ -148,7 +148,7 @@ public class UserController extends Controller {
         }
     }
 
-    public Response loginUser(String body) {
+    public synchronized Response loginUser(String body) {
         try {
             UserCredentials newUser = getObjectMapper().readValue(body, UserCredentials.class);
             // check, if username and password correct

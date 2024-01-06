@@ -1,18 +1,17 @@
 package org.example.frontend;
 
-import lombok.Getter;
-import lombok.Setter;
 import java.lang.Math;
 
 public class Battle {
-    private User userOne;
-    private User userTwo;
-    public void setUsers()
-    {
-        // maybe setting users for battle --maybe
+    private final User userOne;
+    private final User userTwo;
+
+    public Battle(User userOne, User userTwo) {
+        this.userOne = userOne;
+        this.userTwo = userTwo;
     }
-    public void setNewEloPoints(int userOneElo, int userTwoElo, Result result)
-    {
+
+    public void setNewEloPoints(int userOneElo, int userTwoElo, Result result) {
         // the following Elo calculation is the official Elo calculation used in chess
         // the Result-parameter relates always to the userOneElo
 

@@ -44,7 +44,7 @@ public class Game {
     }
 
     public User getUser(String token) {
-        for(User user : users) {
+        for(User user : this.users) {
             if(Objects.equals(user.getProfile().getToken(), token)) {
                 return user;
             }
@@ -53,12 +53,31 @@ public class Game {
     }
 
     public String getUsernameFromToken(String token) {
-        for(User user : users) {
+        for(User user : this.users) {
             if(Objects.equals(user.getProfile().getToken(), token)) {
                 return user.getProfile().getUsername();
             }
         }
         return null;
+    }
+
+    public String runNewBattle(User userOne, User userTwo) {
+        // get battling users
+
+        // start new battle
+        return "";
+    }
+
+    public boolean checkBattleLobby() {
+        // return true, if on user is in battle-lobby
+        // return false, if battle-lobby is empty
+        for(User user : this.users) {
+            if(user.isInBattleLobby()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 }

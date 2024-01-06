@@ -34,7 +34,7 @@ public class CardController extends Controller {
         setGame(game);
     }
 
-    public Response createPackage(String body, String token) {
+    public synchronized Response createPackage(String body, String token) {
         try {
             // check, if admin is logged in
             if(token.isEmpty()) {
@@ -94,7 +94,7 @@ public class CardController extends Controller {
         }
     }
 
-    public Response acquirePackage(String token, DatabaseService databaseService) {
+    public synchronized Response acquirePackage(String token, DatabaseService databaseService) {
         try {
             // check, if login authorized
             if(token.isEmpty() || !checkAuthorization(token, false)) {
@@ -219,7 +219,7 @@ public class CardController extends Controller {
         }
     }
 
-    public Response getDeck(String token, String passedFormat, DatabaseService databaseService) {
+    public synchronized Response getDeck(String token, String passedFormat, DatabaseService databaseService) {
         try {
             // check, if login authorized
             if(token.isEmpty() || !checkAuthorization(token, false)) {
@@ -284,7 +284,7 @@ public class CardController extends Controller {
         }
     }
 
-    public Response updateDeck(String token, String body, DatabaseService databaseService) {
+    public synchronized Response updateDeck(String token, String body, DatabaseService databaseService) {
         try {
             // check, if login authorized
             if(token.isEmpty() || !checkAuthorization(token, false)) {
