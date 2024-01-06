@@ -2,11 +2,6 @@
 class User
 {
     -Profile profile
-    -boolean isLoggedIn
-    +Profile getProfile()
-    +boolean getIsLoggedIn()
-    +void setIsLoggedIn()
-    +void setProfile()
     +void manageCards()
     +void addCardToDeck()
     +void addUserCard(Card[] cardsToBeAdded)
@@ -20,15 +15,6 @@ class Profile
     -int eloPoints = 100
     -Card[] stack
     +Profile(String un, String pw)
-    +void setUsername(String name)
-    +void setPassword(String pw)
-    +void setCoins()
-    +void setEloPoints()
-    +String getUsername()
-    +String getPassword()
-    +int getCoins()
-    +int getEloPoints()
-    +Card[] getUserCards()
     +void printProfile()
 }
 enum Result
@@ -42,6 +28,7 @@ enum ElementType
     FIRE
     WATER
     NORMAL
+    NONE
 }
 class Card
 {
@@ -49,28 +36,12 @@ class Card
     +int final damage
     -boolean isInDeck
     -ElementType type
-    +String getCardName()
-    +boolean getIsCardInDeck()
-    +ElementType getElementType()
-    +void setCardName()
-    +void setCardInDeck()
-    +void setElementType()
-}
-class CardMonster
-{
-    +void makeDamage()
-}
-class CardSpell
-{
-    +void makeDamage()
 }
 class Battle
 {
     -User userOne
     -User userTwo
     +void setUsers(User firstUser, User secondUser)
-    +User getUserOne()
-    +User getUserTwo()
     +void printInstructions()
     +void printBattleInformation()
     +void showBattleMenu()
@@ -89,36 +60,17 @@ class Shop
 class Game
 {
     -User users[]
-    -Statistics stats
     -Shop shop
     +void startGame()
     +void showMenu()
     +void startBattle()
-    +void viewEditProfile()
-    +void endGame()
-    +void signIn()
-    +boolean signUp()
-    +boolean login()
-    +void printAsciiImage()
-    +void printWelcomeImage()
-    +void printInstructions(boolean inputError)
-    +{static} void clearScreen()
-}
-class Statistics
-{
-    +void printGameStats()
-    +void printBattleStats(int battleId)
 }
 
-CardMonster <|-- Card
-CardSpell <|-- Card
 User "1" o-- "0..*" Card : "owns"
 Game "1" *-- "0..*" Battle : "take place"
-Game "1" *-- "1" Statistics : "has"
 Game "1" *-- "2" User : "has"
 Battle "1..*" *-- "2" User : "is battled"
 Result "1" *-- "1..*" Battle : "ends in"
-Statistics "1" o-- "1..*" User : "make"
 Profile "1" *-- "1" User : "has"
 Shop "1" o-- "1..*" User : "buys Cards"
 Shop "1" o-- "1..*" Card : "sells"

@@ -3,6 +3,8 @@ package org.example.frontend;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Objects;
+
 public class Card {
     @Getter
     @Setter
@@ -20,6 +22,22 @@ public class Card {
     Card(int damage, ElementType et) {
         this.damage = damage;
         this.elementType = et;
+    }
+
+    Card(Card other) {
+        setId(other.getId());
+        setName(other.getName());
+        setDamage(other.getDamage());
+        setElementType(other.getElementType().ordinal());
+        setIsInDeck(getIsInDeck());
+    }
+
+    Card(Card other, boolean isInDeck) {
+        setId(other.getId());
+        setName(other.getName());
+        setDamage(other.getDamage());
+        setElementType(other.getElementType().ordinal());
+        setIsInDeck(isInDeck);
     }
 
     public Card(org.example.backend.app.models.Card other) {
@@ -47,6 +65,13 @@ public class Card {
         return this.isInDeck;
     }
 
-    public void makeDamage() {}    // overriding in child classes
+    public boolean isMonsterCard() {
+        return !isSpellCard();
+    }
 
+    public boolean isSpellCard() {
+        return Objects.equals(getName(), "WaterSpell") ||
+                Objects.equals(getName(), "FireSpell") ||
+                Objects.equals(getName(), "RegularSpell");
+    }
 }

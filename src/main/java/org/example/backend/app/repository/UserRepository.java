@@ -46,6 +46,10 @@ public class UserRepository implements Repository<User> {
         getUserDao().update(user);
     }
 
+    public void updateElo(int user_id, int elo) {
+        getUserDao().updateElo(user_id, elo);
+    }
+
     public void update(int coins, int user_id) {
         getUserDao().update(coins, user_id);
     }

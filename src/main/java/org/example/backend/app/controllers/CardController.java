@@ -324,7 +324,6 @@ public class CardController extends Controller {
             // update deck
             // frontend
             getGame().getUser(token).setDeck(submittedDeck);
-            getGame().getUser(token).printDeck();   // testing
             // backend
                 // set all to false
             getCardRepository().removeDeck(user.getUser_id());

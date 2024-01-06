@@ -2,6 +2,7 @@ package org.example.frontend;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.example.backend.app.models.Battle;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -12,11 +13,9 @@ public class Game {
     // Game has only logged-in users
     // --> no point in having all players from the database in game
     private ArrayList<User> users = new ArrayList<>();
-    private Statistics stats;
     private Shop shop;
 
-    public Game()
-    {
+    public Game() {
 
     }
 
@@ -61,23 +60,33 @@ public class Game {
         return null;
     }
 
-    public String runNewBattle(User userOne, User userTwo) {
-        // get battling users
-
+    public Battle runNewBattle(User userOne, User userTwo) {
         // start new battle
-        return "";
+        org.example.frontend.Battle battle = new org.example.frontend.Battle(userOne, userTwo);
+        battle.runBattle();
+
+        return new Battle(battle, battle.getLog());
     }
 
-    public boolean checkBattleLobby() {
-        // return true, if on user is in battle-lobby
-        // return false, if battle-lobby is empty
+    public synchronized User getWaitingUserForBattle() {
+        // return first User, if on user is in battle-lobby
+        // return null, if battle-lobby is empty
+
+        // this sleep time gives other threads in queue enough time to complete their task
+        // time is chosen randomly
+        try {
+            Thread.sleep(20);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
         for(User user : this.users) {
             if(user.isInBattleLobby()) {
-                return true;
+                return user;
             }
         }
 
-        return false;
+        return null;
     }
 
 }

@@ -4,22 +4,20 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
-import org.example.backend.app.models.Card;
-import org.example.backend.app.models.CardJSON;
-import org.example.backend.app.models.User;
-import org.example.backend.app.models.UserStats;
+import org.example.backend.app.models.*;
 import org.example.backend.app.repository.BattleRepository;
+import org.example.backend.app.repository.CardRepository;
 import org.example.backend.app.repository.UserRepository;
 import org.example.backend.app.services.DatabaseService;
+import org.example.backend.daos.CardDAO;
 import org.example.backend.daos.UserDAO;
-import org.example.backend.http.Authorization;
 import org.example.backend.http.ContentType;
 import org.example.backend.http.HttpStatus;
 import org.example.backend.server.Response;
 import org.example.frontend.Game;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class BattleController extends Controller {
     @Setter(AccessLevel.PRIVATE)
@@ -28,6 +26,8 @@ public class BattleController extends Controller {
     @Setter(AccessLevel.PRIVATE)
     @Getter(AccessLevel.PRIVATE)
     private Game game;
+    private ReentrantLock lockFirstUser = new ReentrantLock();
+    private ReentrantLock lockSecondUser = new ReentrantLock();
 
     public BattleController(BattleRepository battleRepository, Game game) {
         setBattleRepository(battleRepository);
@@ -120,6 +120,7 @@ public class BattleController extends Controller {
     }
 
     public Response runBattle(String token, DatabaseService databaseService) {
+
         // check, if login authorized
         if(token.isEmpty() || !checkAuthorization(token, false)) {
             return new Response(
@@ -129,49 +130,124 @@ public class BattleController extends Controller {
             );
         }
 
-        String responseData = null;
+        // check, if user has set cards in deck
+        int user_id = this.game.getUser(token).getProfile().getUser_id();
+        ArrayList<Card> userCards =
+                new CardRepository(new CardDAO(databaseService.getConnection())).getDeck(user_id);
 
-        // if no other player is in battle lobby
-        if(!this.game.checkBattleLobby()) {
-            startBattleWithFirstUser(token);
-        } else {
-            responseData = startBattleWithSecondUser(token);
+        // user has no cards in deck
+        if(userCards.isEmpty()) {
+            return new Response(
+                    HttpStatus.NO_CONTENT,
+                    ContentType.JSON,
+                    token,
+                    "{ \"data\": null, \"error\": \"The request was fine, but the deck doesn't have any cards\" }"
+            );
         }
 
-        // updating both users data
-            // winner, looser
-            // cards changed owner
+        Battle newBattle = null;
+        org.example.frontend.User waitingUser = this.game.getWaitingUserForBattle();
 
+        // if no other player is in battle lobby
+        if(waitingUser == null) {
+            // set this player in lobby
+            this.game.getUser(token).setInBattleLobby(true);
+
+            lockFirstUser.lock();
+            waitForSecondUser();
+            lockFirstUser.unlock();
+        } else {
+            // remove other player from battle-lobby
+            waitingUser.setInBattleLobby(false);
+
+            lockSecondUser.lock();
+            newBattle = startBattleWithSecondUser(token, waitingUser);
+            // updating both users data
+                // winner, looser
+                // cards changed owner
+            createBattle(newBattle);
+
+            // update only, if a tie happened
+            if(!newBattle.getTie()) {
+                updateCardsOfUsers(token, waitingUser, databaseService);
+            }
+            updateEloOfUsers(token, waitingUser, databaseService);
+            lockSecondUser.unlock();
+        }
+
+        // get Battle data
+        Battle completedBattle = getBattleRepository().getLast();
         return new Response(
-                HttpStatus.INTERNAL_SERVER_ERROR,
+                HttpStatus.OK,
                 ContentType.JSON,
                 token,
-                "{ \"data\": " + responseData + ", \"error\": \"Internal Server Error\" }"
+                completedBattle.getLog()
         );
     }
 
-    public synchronized void startBattleWithFirstUser(String token) {
-        // set this player in lobby
-        this.game.getUser(token).setInBattleLobby(true);
+    public synchronized void createBattle(Battle battle) {
+        if(battle != null) {
+            getBattleRepository().add(battle);
+        }
+        // wake up other waiting thread
+        this.notifyAll();
+    }
+
+    public void updateCardsOfUsers(String token, org.example.frontend.User firstUser, DatabaseService databaseService) {
+        org.example.frontend.User secondUser = this.game.getUser(token);
+
+        // update cards of first User
+        ArrayList<org.example.frontend.Card> firstUserCards = firstUser.getDeck();
+        if(firstUserCards != null) {
+            for(org.example.frontend.Card cardFirstUser : firstUserCards) {
+                String card_id = cardFirstUser.getId();
+                new CardRepository(new CardDAO(databaseService.getConnection())).update(
+                        card_id, firstUser.getProfile().getUser_id());
+            }
+        }
+
+        // update cards of second User
+        ArrayList<org.example.frontend.Card> secondUserCards = secondUser.getDeck();
+        if(secondUserCards != null) {
+            for(org.example.frontend.Card cardSecondUser : secondUserCards) {
+                String card_id = cardSecondUser.getId();
+                new CardRepository(new CardDAO(databaseService.getConnection())).update(
+                        card_id, secondUser.getProfile().getUser_id());
+            }
+        }
+
+        // remove deck of first User
+        new CardRepository(new CardDAO(databaseService.getConnection())).removeDeck(firstUser.getProfile().getUser_id());
+
+        // remove deck of second User
+        new CardRepository(new CardDAO(databaseService.getConnection())).removeDeck(secondUser.getProfile().getUser_id());
+    }
+
+    public void updateEloOfUsers(String token, org.example.frontend.User firstUser, DatabaseService databaseService) {
+        org.example.frontend.User secondUser = this.game.getUser(token);
+
+        // update elo of first User
+        int elo_firstUser = firstUser.getProfile().getEloPoints();
+        int id_firstUser = firstUser.getProfile().getUser_id();
+        new UserRepository(new UserDAO(databaseService.getConnection())).updateElo(id_firstUser, elo_firstUser);
+
+        // update elo of second User
+        int elo_secondUser = secondUser.getProfile().getEloPoints();
+        int id_secondUser = secondUser.getProfile().getUser_id();
+        new UserRepository(new UserDAO(databaseService.getConnection())).updateElo(id_secondUser, elo_secondUser);
+    }
+
+    public synchronized void waitForSecondUser() {
+        // this player only waits to get picked up
         try {
             this.wait();
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        this.game.getUser(token).setInBattleLobby(false);
     }
 
-    public synchronized String startBattleWithSecondUser(String token) {
-        this.game.getUser(token).setInBattleLobby(true);
-
+    public synchronized Battle startBattleWithSecondUser(String token, org.example.frontend.User firstUser) {
         org.example.frontend.User secondUser = this.game.getUser(token);
-        org.example.frontend.User firstUser = this.game.getUser(token);
-        // notify other player and proceed with battle
-        this.notifyAll();
-
-        this.game.getUser(token).setInBattleLobby(false);
-
-        // get second user id
 
         // start battle
         return this.game.runNewBattle(firstUser, secondUser);

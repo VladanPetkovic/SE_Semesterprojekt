@@ -22,6 +22,8 @@ public class BattleRepository implements Repository<Battle> {
         return getBattleDAO().read(id);
     }
 
+    public Battle getLast() { return getBattleDAO().readLast(); }
+
     public int getWinCount(int user_id) {
         return getBattleDAO().readWinnerCount(user_id);
     }

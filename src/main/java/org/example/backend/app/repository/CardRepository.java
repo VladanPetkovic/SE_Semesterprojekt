@@ -68,6 +68,10 @@ public class CardRepository implements Repository<Card> {
         getCardDAO().update(card);
     }
 
+    public void update(String card_id, int user_id) {
+        getCardDAO().update(card_id, user_id);
+    }
+
     @Override
     public void remove(int id) {
         // NOT WORKING --> purpose

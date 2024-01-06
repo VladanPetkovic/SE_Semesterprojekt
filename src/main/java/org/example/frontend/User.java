@@ -2,10 +2,10 @@ package org.example.frontend;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.example.backend.app.models.CardJSON;
 
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.Random;
 
 @Getter
 @Setter
@@ -14,8 +14,7 @@ public class User {
     private ArrayList<Card> stack = new ArrayList<Card>();
     boolean isInBattleLobby = false;
 
-    User()
-    {
+    User() {
 
     }
 
@@ -57,11 +56,11 @@ public class User {
         }
     }
 
-    public ArrayList<CardJSON> getDeck() {
-        ArrayList<CardJSON> deck = new ArrayList<CardJSON>();
+    public ArrayList<Card> getDeck() {
+        ArrayList<Card> deck = new ArrayList<Card>();
         for(Card card : this.stack) {
             if(card.getIsInDeck()) {
-                deck.add(new CardJSON(card));
+                deck.add(new Card(card));
             }
         }
         return deck;
@@ -81,5 +80,24 @@ public class User {
                 }
             }
         }
+    }
+
+    public Card getRandomCardFromDeck() {
+        ArrayList<Card> deck = getDeck();
+        Random random = new Random();
+
+        int randomCardIndex = random.nextInt(4);
+        for(Card returnCard : deck) {
+            if(randomCardIndex == 0) {
+                return returnCard;
+            }
+            randomCardIndex--;
+        }
+
+        return deck.get(0);
+    }
+
+    public void removeCard(String card_id) {
+        this.stack.removeIf(card -> Objects.equals(card.getId(), card_id));
     }
 }

@@ -137,6 +137,23 @@ public class CardDAO implements DAO<Card> {
         }
     }
 
+    public void update(String card_id, int new_user_id) {
+        String updateStmt =
+                "UPDATE cards " +
+                "SET user_id = ? " +
+                "WHERE card_id = ?;";
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(updateStmt);
+            preparedStatement.setInt(1, new_user_id);
+            preparedStatement.setString(2, card_id);
+            preparedStatement.executeUpdate();
+            setCardCache(null);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void removeDeck(int user_id) {
         String updateStmt =
                 "UPDATE cards " +
