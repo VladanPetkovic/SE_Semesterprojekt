@@ -18,6 +18,8 @@ public class Card {
     @Getter
     private ElementType elementType;
     private boolean isInDeck;
+    @Getter
+    private MonsterType monsterType;
 
     Card(int damage, ElementType et) {
         this.damage = damage;
@@ -50,14 +52,42 @@ public class Card {
 
     public void setElementType(int value) {
         switch (value) {
-            case 0 -> this.elementType = ElementType.FIRE;
-            case 1 -> this.elementType = ElementType.WATER;
-            case 2 -> this.elementType = ElementType.REGULAR;
+            case 0 -> this.elementType = ElementType.WATER;
+            case 1 -> this.elementType = ElementType.FIRE;
             default ->
                 // Knight, Dragon, Ork, Kraken
-                    this.elementType = ElementType.NONE;
+                    this.elementType = ElementType.REGULAR;
         };
     }
+
+    public void setMonsterType(MonsterType type) {
+        switch (this.getName()) {
+            case "WaterGoblin":
+            case "FireGoblin":
+            case "RegularGoblin":
+                this.monsterType = MonsterType.Goblin;
+                break;
+            case "WaterTroll":
+            case "FireTroll":
+            case "RegularTroll":
+                this.monsterType = MonsterType.Troll;
+                break;
+            case "WaterElf":
+            case "FireElf":
+            case "RegularElf":
+                this.monsterType = MonsterType.Elf;
+                break;
+            case "WaterSpell":
+            case "FireSpell":
+            case "RegularSpell":
+                this.monsterType = MonsterType.Spell;
+                break;
+            default:
+                // Knight, Dragon, Ork, Kraken, Wizard
+                this.monsterType = MonsterType.Other;
+        };
+    }
+
     public void setIsInDeck(boolean inDeck) {
         this.isInDeck = inDeck;
     }

@@ -16,8 +16,10 @@ public class Battle {
     private int looser_id;
     private ArrayList<String> log;
     boolean tie = false;
+    final ElementType[][] effectiveMatrix = new ElementType[3][3];
 
     public Battle(User userOne, User userTwo) {
+        setEffectiveMatrix();
         this.userOne = userOne;
         this.userTwo = userTwo;
     }
@@ -67,17 +69,111 @@ public class Battle {
     }
 
     public Card monsterFight(Card userOneCard, Card userTwoCard) {
-        if(userOneCard.getDamage() == userTwoCard.getDamage()) {            // tie
-            return null;
-        } else if(userOneCard.getDamage() > userTwoCard.getDamage()) {      // userOne wins round
-            return userOneCard;
-        } else {                                                            // userTwo wins round
+        MonsterType cardOneType = userOneCard.getMonsterType();
+        MonsterType cardTwoType = userTwoCard.getMonsterType();
+
+        // check edge cases
+        // Goblins are too afraid of Dragons to attack.
+        if(cardOneType == MonsterType.Goblin && Objects.equals(userTwoCard.getName(), "Dragon")
+        || cardTwoType == MonsterType.Goblin && Objects.equals(userOneCard.getName(), "Dragon")) {
+            if(Objects.equals(userOneCard.getName(), "Dragon")) {
+                return userOneCard;
+            }
             return userTwoCard;
         }
+
+        // Wizzard can control Orks so they are not able to damage them.
+        if(Objects.equals(userOneCard.getName(), "Wizzard") && Objects.equals(userTwoCard.getName(), "Ork")
+        || Objects.equals(userTwoCard.getName(), "Wizzard") && Objects.equals(userOneCard.getName(), "Ork")) {
+            if(Objects.equals(userOneCard.getName(), "Wizzard")) {
+                return userOneCard;
+            }
+            return userTwoCard;
+        }
+
+        // The FireElves know Dragons since they were little and can evade their attacks.
+        if(Objects.equals(userOneCard.getName(), "FireElf") && Objects.equals(userTwoCard.getName(), "Dragon")
+        || Objects.equals(userTwoCard.getName(), "FireElf") && Objects.equals(userOneCard.getName(), "Dragon")) {
+            if(Objects.equals(userOneCard.getName(), "FireElf")) {
+                return userOneCard;
+            }
+            return userTwoCard;
+        }
+
+        // all other:
+        return compareDamage(userOneCard.getDamage(), userTwoCard.getDamage(), userOneCard, userTwoCard);
     }
 
     public Card spellMixFight(Card userOneCard, Card userTwoCard) {
-        return null;
+        MonsterType cardOneType = userOneCard.getMonsterType();
+        MonsterType cardTwoType = userTwoCard.getMonsterType();
+        float userOneDamage = userOneCard.getDamage();
+        float userTwoDamage = userTwoCard.getDamage();
+        ElementType cardOneElement = userOneCard.getElementType();
+        ElementType cardTwoElement = userTwoCard.getElementType();
+
+        // edge cases
+        // The armor of Knights is so heavy that WaterSpells make them drown them instantly.
+        if(Objects.equals(userOneCard.getName(), "WaterSpell") && Objects.equals(userTwoCard.getName(), "Knight")
+        || Objects.equals(userTwoCard.getName(), "WaterSpell") && Objects.equals(userOneCard.getName(), "Knight")) {
+            if(Objects.equals(userOneCard.getName(), "WaterSpell")) {
+                return userOneCard;
+            }
+            return userTwoCard;
+        }
+
+        // The Kraken is immune against spells.
+        if(Objects.equals(userOneCard.getName(), "Kraken") && cardTwoType == MonsterType.Spell
+        || Objects.equals(userTwoCard.getName(), "Kraken") && cardOneType == MonsterType.Spell) {
+            if(Objects.equals(userOneCard.getName(), "Kraken")) {
+                return userOneCard;
+            }
+            return userTwoCard;
+        }
+
+        // regular cases
+        // effective and not effective
+            // we are using some math: effective matrix
+
+        // case: water and fire card
+        if(this.effectiveMatrix[cardOneElement.ordinal()][cardTwoElement.ordinal()] == ElementType.WATER) {
+            if(cardOneElement == ElementType.WATER) {
+                return compareDamage(userOneDamage*2, userTwoDamage/2, userOneCard, userTwoCard);
+            } else {
+                return compareDamage(userOneDamage/2, userTwoDamage*2, userOneCard, userTwoCard);
+            }
+        }
+
+        // case: fire and normal card
+        if(this.effectiveMatrix[cardOneElement.ordinal()][cardTwoElement.ordinal()] == ElementType.FIRE) {
+            if(cardOneElement == ElementType.FIRE) {
+                return compareDamage(userOneDamage*2, userTwoDamage/2, userOneCard, userTwoCard);
+            } else {
+                return compareDamage(userOneDamage/2, userTwoDamage*2, userOneCard, userTwoCard);
+            }
+        }
+
+        // case: normal and water card
+        if(this.effectiveMatrix[cardOneElement.ordinal()][cardTwoElement.ordinal()] == ElementType.REGULAR) {
+            if(cardOneElement == ElementType.REGULAR) {
+                return compareDamage(userOneDamage*2, userTwoDamage/2, userOneCard, userTwoCard);
+            } else {
+                return compareDamage(userOneDamage/2, userTwoDamage*2, userOneCard, userTwoCard);
+            }
+        }
+
+        // no effect
+        return compareDamage(userOneDamage, userTwoDamage, userOneCard, userTwoCard);
+    }
+
+    public Card compareDamage(float userOneDamage, float userTwoDamage, Card userOneCard, Card userTwoCard) {
+        if(userOneDamage == userTwoDamage) {            // tie
+            return null;
+        } else if(userOneDamage > userTwoDamage) {      // userOne wins round
+            return userOneCard;
+        } else {                                        // userTwo wins round
+            return userTwoCard;
+        }
     }
 
     public String getRoundLog(User winner, Card winner_card, Card looser_card, int roundNumber, Boolean isTie) {
@@ -140,5 +236,29 @@ public class Battle {
             setLooser_id(this.userTwo.getProfile().getUser_id());
         }
 
+    }
+
+    /*            | a | b | c
+               ---|---|---|---
+                a | - | a | c
+                b | a | - | b
+                c | c | b | -
+
+            a = water
+            b = fire
+            c = regular*/
+
+    public void setEffectiveMatrix() {
+        this.effectiveMatrix[0][0] = ElementType.NONE;
+        this.effectiveMatrix[0][1] = ElementType.WATER;
+        this.effectiveMatrix[0][2] = ElementType.REGULAR;
+
+        this.effectiveMatrix[1][0] = ElementType.WATER;
+        this.effectiveMatrix[1][1] = ElementType.NONE;
+        this.effectiveMatrix[1][2] = ElementType.FIRE;
+
+        this.effectiveMatrix[2][0] = ElementType.REGULAR;
+        this.effectiveMatrix[2][1] = ElementType.FIRE;
+        this.effectiveMatrix[2][2] = ElementType.NONE;
     }
 }

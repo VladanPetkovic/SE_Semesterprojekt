@@ -50,10 +50,9 @@ public class Card {
         return switch (name) {
             case "FireGoblin", "FireTroll", "FireElf", "FireSpell" -> ElementType.FIRE.ordinal();
             case "WaterGoblin", "WaterTroll", "WaterElf", "WaterSpell" -> ElementType.WATER.ordinal();
-            case "RegularGoblin", "RegularTroll", "RegularElf", "RegularSpell" -> ElementType.REGULAR.ordinal();
             default ->
-                // Knight, Dragon, Ork, Kraken
-                    ElementType.NONE.ordinal();
+                // Knight, Dragon, Ork, Kraken, "RegularGoblin", "RegularTroll", "RegularElf", "RegularSpell"
+                    ElementType.REGULAR.ordinal();
         };
     }
 }
