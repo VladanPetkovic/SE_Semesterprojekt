@@ -21,10 +21,10 @@ public class Card {
     @Getter
     private MonsterType monsterType;
 
-    Card(String name, float damage, ElementType et) {
+    Card(String name, float damage) {
         setName(name);
         setDamage(damage);
-        setElementType(et.ordinal());
+        setElementType();
         setMonsterType();
     }
 
@@ -32,7 +32,7 @@ public class Card {
         setId(other.getId());
         setName(other.getName());
         setDamage(other.getDamage());
-        setElementType(other.getElementType().ordinal());
+        setElementType();
         setIsInDeck(getIsInDeck());
         setMonsterType();
     }
@@ -41,7 +41,7 @@ public class Card {
         setId(other.getId());
         setName(other.getName());
         setDamage(other.getDamage());
-        setElementType(other.getElementType().ordinal());
+        setElementType();
         setIsInDeck(isInDeck);
         setMonsterType();
     }
@@ -50,18 +50,28 @@ public class Card {
         setId(other.getCard_id());
         setName(other.getName());
         setDamage(other.getDamage());
-        setElementType(other.getElement_type());
+        setElementType();
         setIsInDeck(false);
         setMonsterType();
     }
 
-    public void setElementType(int value) {
-        switch (value) {
-            case 0 -> this.elementType = ElementType.WATER;
-            case 1 -> this.elementType = ElementType.FIRE;
-            default ->
-                // Knight, Dragon, Ork, Kraken and all Regular
-                    this.elementType = ElementType.REGULAR;
+    public void setElementType() {
+        switch (this.getName()) {
+            case "WaterGoblin":
+            case "WaterTroll":
+            case "WaterElf":
+            case "WaterSpell":
+                this.elementType = ElementType.WATER;
+                break;
+            case "FireGoblin":
+            case "FireTroll":
+            case "FireElf":
+            case "FireSpell":
+                this.elementType = ElementType.FIRE;
+                break;
+            default:
+                // Knight, Dragon, Ork, Kraken, Wizard and Regular-...
+                this.elementType = ElementType.REGULAR;
         };
     }
 

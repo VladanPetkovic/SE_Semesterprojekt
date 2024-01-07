@@ -2,20 +2,27 @@
 class User
 {
     -Profile profile
-    +void manageCards()
-    +void addCardToDeck()
-    +void addUserCard(Card[] cardsToBeAdded)
+    -ArrayList<Card> stack
+    -boolean isInBattleLobby = false
+    +void decreaseCoins()
+    +int countCardsInDeck()
+    +void printCards()
     +void printDeck()
+    +ArrayList<Card> getDeck()
+    +void setDeck(ArrayList<String> card_ids)
+    +Card getRandomCardFromDeck()
+    +removeCard(String card_id)
 }
 class Profile
 {
+    -String user_id
     -String username
     -String password
+    -String token
     -int coins = 20
     -int eloPoints = 100
-    -Card[] stack
-    +Profile(String un, String pw)
-    +void printProfile()
+    -String bio
+    -String image
 }
 enum Result
 {
@@ -32,47 +39,59 @@ enum ElementType
 }
 class Card
 {
+    -String id
     -String name
-    +int final damage
+    -float damage
+    -ElementType elementType
     -boolean isInDeck
-    -ElementType type
+    -MonsterType monsterType
+    +void setElementType()
+    +void setMonsterType()
+    +isMonsterCard()
+    +isSpellCard()
 }
 class Battle
 {
-    -User userOne
-    -User userTwo
-    +void setUsers(User firstUser, User secondUser)
-    +void printInstructions()
-    +void printBattleInformation()
-    +void showBattleMenu()
-    +void startNewBattle()
-    +void endOfBattle()
-    +void setNewEloPoints()
+    -final User userOne
+    -final User userTwo
+    -int winner_id
+    -int looser_id
+    -ArrayList<String> log
+    -boolean tie = false
+    +final ElementType[][] effectiveMatrix
+    +void runBattle()
+    +Card getBetterCard(Card userOneCard, Card userTwoCard)
+    +Card monsterFight(Card userOneCard, Card userTwoCard)
+    +Card spellMixFight(Card userOneCard, Card userTwoCard)
+    +Card compareDamage(float userOneDam, float userTwoDam, Card userOneCard, Card userTwoCard)
+    +String getRoundLog(...)
+    +void setNewEloPoints(int userOneElo, int userTwoElo, Result result)
+    +void setWinnerLooser(int roundsPlayed)
+    +void setEffectiveMatrix()
 }
 class Shop
 {
-    +{static} final int cardCount = 5
-    +void purchaseCards()
-    +void tradeCards(Card cardToBeRemoved)
-    +void shopMenu()
-    +void printInstructions(boolean wrongInputMade)
+
 }
 class Game
 {
-    -User users[]
+    -ArrayList<User> users
     -Shop shop
-    +void startGame()
-    +void showMenu()
-    +void startBattle()
+    +void addUserToGame(User user)
+    +boolean checkPlayerToken(String token, boolean onlyAdmin)
+    +User getUser(String token)
+    +String getUsernameFromToken(String token)
+    +Battle runNewBattle(User userOne, User userTwo)
+    +User getWaitingUserForBattle()
 }
 
 User "1" o-- "0..*" Card : "owns"
 Game "1" *-- "0..*" Battle : "take place"
-Game "1" *-- "2" User : "has"
+Game "1" *-- "0..*" User : "has"
 Battle "1..*" *-- "2" User : "is battled"
 Result "1" *-- "1..*" Battle : "ends in"
 Profile "1" *-- "1" User : "has"
-Shop "1" o-- "1..*" User : "buys Cards"
+Shop "1" o-- "1..*" User : "trades Cards"
 Shop "1" o-- "1..*" Card : "sells"
 Game "1" *-- "1" Shop : "has"
 ElementType "1" *-- "0..*" Card : "is"

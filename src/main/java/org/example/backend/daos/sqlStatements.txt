@@ -5,26 +5,29 @@ Table users {
   name VARCHAR(20)
   elopoints integer
   coins integer
+  password VARCHAR(64)
+  bio VARCHAR(128)
+  image VARCHAR(64)
 }
 
 Table battles {
   battle_id SERIAL [PRIMARY KEY]
   user_winner_id integer
   user_looser_id integer
-  log VARCHAR(4000)
+  log VARCHAR(10000)
   tie BOOLEAN
 }
 
 Table cards {
-  card_id SERIAL [PRIMARY KEY]
-  fk_user_id integer
+  card_id VARCHAR(40) [PRIMARY KEY]
+  user_id integer
   name VARCHAR(20)
-  damage INT
+  damage FLOAT
   element_type INT
   isInDeck BOOLEAN
 }
 
-Ref: cards.fk_user_id > users.user_id // many-to-one
+Ref: cards.user_id > users.user_id // many-to-one
 Ref: users.user_id < battles.user_winner_id
 Ref: users.user_id < battles.user_looser_id
 
@@ -60,22 +63,3 @@ CREATE TABLE IF NOT EXISTS "cards" (
         element_type INT NOT NULL,
         isInDeck BOOLEAN NOT NULL
 );
-
-
----------------------------------------
-
-test inserts
--- Example 1
-INSERT INTO battles (user_winner_id, user_looser_id, log, time) VALUES (10,11, 'Battle log 1', '2024-01-01 12:30:00');
-
--- Example 2
-INSERT INTO battles (user_winner_id, user_looser_id, log, time) VALUES (33, 10, 'Battle log 2', '2024-01-02 14:45:00');
-
--- Example 3
-INSERT INTO battles (user_winner_id, user_looser_id, log, time) VALUES (10, 11, 'Battle log 3', '2024-01-03 10:15:00');
-
--- Example 4
-INSERT INTO battles (user_winner_id, user_looser_id, log, time) VALUES (10, 33, 'Battle log 4', '2024-01-04 18:20:00');
-
--- Example 5
-INSERT INTO battles (user_winner_id, user_looser_id, log, time) VALUES (10, 33, 'Battle log 5', '2024-01-05 16:10:00');

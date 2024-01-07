@@ -14,8 +14,9 @@ public class User {
     private ArrayList<Card> stack = new ArrayList<Card>();
     boolean isInBattleLobby = false;
 
+    // for testing purpose
     User() {
-
+        this.profile = new Profile();
     }
 
     public User(org.example.backend.app.models.User other) {

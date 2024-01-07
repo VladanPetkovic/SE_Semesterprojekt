@@ -27,4 +27,8 @@ public class Profile {
         setBio(other.getBio());
         setImage(other.getImage());
     }
+
+    public Profile() {
+
+    }
 }

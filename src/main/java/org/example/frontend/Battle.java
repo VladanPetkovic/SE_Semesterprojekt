@@ -196,10 +196,10 @@ public class Battle {
         // the following Elo calculation is the official Elo calculation used in chess
         // the Result-parameter relates always to the userOneElo
 
-        // if someone's elo number is 150 higher than yours, the person has a probability of 91% to win
+        // if someone's elo number is 200 higher than yours, the person has a probability of 91% to win
 
-        double calculationOne = 1/(1 + Math.pow(10, (double) (userTwoElo - userOneElo) /150));
-        double calculationTwo = 1/(1 + Math.pow(10, (double) (userOneElo - userTwoElo) /150));
+        double calculationOne = 1/(1 + Math.pow(10, (double) (userTwoElo - userOneElo) /200));
+        double calculationTwo = 1/(1 + Math.pow(10, (double) (userOneElo - userTwoElo) /200));
         int newEloUserOne = 0;
         int newEloUserTwo = 0;
         if(result == Result.LOSS) {
