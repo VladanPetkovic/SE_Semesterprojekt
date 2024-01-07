@@ -21,9 +21,11 @@ public class Card {
     @Getter
     private MonsterType monsterType;
 
-    Card(int damage, ElementType et) {
-        this.damage = damage;
-        this.elementType = et;
+    Card(String name, float damage, ElementType et) {
+        setName(name);
+        setDamage(damage);
+        setElementType(et.ordinal());
+        setMonsterType();
     }
 
     Card(Card other) {
@@ -32,6 +34,7 @@ public class Card {
         setDamage(other.getDamage());
         setElementType(other.getElementType().ordinal());
         setIsInDeck(getIsInDeck());
+        setMonsterType();
     }
 
     Card(Card other, boolean isInDeck) {
@@ -40,6 +43,7 @@ public class Card {
         setDamage(other.getDamage());
         setElementType(other.getElementType().ordinal());
         setIsInDeck(isInDeck);
+        setMonsterType();
     }
 
     public Card(org.example.backend.app.models.Card other) {
@@ -48,6 +52,7 @@ public class Card {
         setDamage(other.getDamage());
         setElementType(other.getElement_type());
         setIsInDeck(false);
+        setMonsterType();
     }
 
     public void setElementType(int value) {
@@ -55,12 +60,12 @@ public class Card {
             case 0 -> this.elementType = ElementType.WATER;
             case 1 -> this.elementType = ElementType.FIRE;
             default ->
-                // Knight, Dragon, Ork, Kraken
+                // Knight, Dragon, Ork, Kraken and all Regular
                     this.elementType = ElementType.REGULAR;
         };
     }
 
-    public void setMonsterType(MonsterType type) {
+    public void setMonsterType() {
         switch (this.getName()) {
             case "WaterGoblin":
             case "FireGoblin":

@@ -185,8 +185,4 @@ public class UserController extends Controller {
     public boolean checkAuthorization(String token) {
         return getGame().checkPlayerToken(token, false);
     }
-
-    public int getUserMoney(String username) {
-        return 0;
-    }
 }
