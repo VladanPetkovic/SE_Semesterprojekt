@@ -16,8 +16,11 @@ University of Applied Sciences Technikum Wien
 
 ---
 ### Project access
+
+
 Visit: 
 https://github.com/VladanPetkovic/SE_Semesterprojekt.git to check my project on github.
+
 ---
 ### Legal issue
 > Please note, that the curlScripts have been provided by the University of Applied
