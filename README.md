@@ -4,6 +4,8 @@ Author: Vladan Petkovic
 
 Winter semester 2023
 
+Submit-date: 07.01.2024
+
 ---
 ### Project summary
 
@@ -12,6 +14,26 @@ Winter semester 2023
 
 University of Applied Sciences Technikum Wien
 
+---
+### Project access
+Visit: 
+https://github.com/VladanPetkovic/SE_Semesterprojekt.git to check my project on github.
+---
+### Legal issue
+> Please note, that the curlScripts have been provided by the University of Applied
+> Sciences Technikum Wien and were only adapted by myself
+---
+### Project structure
+
+![UML_diagram](src/main/java/org/example/frontend/uml.png)
+
+---
+
+### Database structure
+![ER_diagram](src/main/java/org/example/backend/daos/ER_diagram.png)
+
+> note, that "log VARCHAR(10000)" is only used for testing and not needed
+> for the project requirements
 ---
 ## GIT Commands
 some Commands needed during the project:
